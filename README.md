@@ -8,7 +8,7 @@ Site de prezentare static, în limba română, pentru servicii de masaj la sediu
 
 ## Publicare curentă
 
-- Proiect Cloudflare Pages: `benvora-grup`, creat prin Direct Upload. O versiune inițială din ramura `codex/benvora-site-2026-11-04` a fost încărcată manual; rafinările ulterioare din PR nu apar public până la un nou upload aprobat. Public: `https://benvora-grup.avyron.eu/`; URL alternativ: `https://benvora-grup.pages.dev/`.
+- Proiect Cloudflare Pages: `benvora-grup`, creat prin Direct Upload. Publicarea se face prin încărcarea manuală a buildului verificat din `main`; versiunea publică trebuie confirmată după fiecare upload. Public: `https://benvora-grup.avyron.eu/`; URL alternativ: `https://benvora-grup.pages.dev/`.
 - DNS `benvora-grup.avyron.eu` este CNAME proxied către `benvora-grup.pages.dev`. În zona `avyron.eu`, ruta Worker mai specifică `benvora-grup.avyron.eu/*` are **Worker None** și lasă cererile către Pages. Excepția este necesară deoarece ruta existentă `*.avyron.eu/*` a Workerului AVYRON ar răspunde cu demo 404.
 - Proiectul Pages nu are încă integrare automată cu GitHub. Conectarea ar acorda aplicației Cloudflare acces nou la repository și a fost respinsă de revizuirea automată a permisiunilor. Până la aprobarea explicită a acestui acces, actualizările se publică doar prin build verificat și Direct Upload. Sursa și istoricul rămân în repo-ul privat GitHub.
 

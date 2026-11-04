@@ -11,7 +11,7 @@
 
 ## De realizat pe partea IT
 
-1. **Release:** revizuirea și aprobarea PR-ului, build final, verificare vizuală pe mobil/desktop, apoi publicarea pe subdomeniul `benvora-grup.avyron.eu` numai după aprobare. Versiunea publică actuală este mai veche decât codul din PR.
+1. **Release:** revizuirea PR-ului, build final, verificare vizuală pe mobil/desktop, publicarea autorizată pe `benvora-grup.avyron.eu` și verificarea răspunsului public pentru fiecare pagină și resursă.
 2. **Legal și indexare:** completarea politicii de confidențialitate cu identitatea operatorului, fluxurile reale de date, furnizorii, temeiurile și perioadele de păstrare; revizuirea cookie-urilor și termenilor. Apoi dezactivarea modului de previzualizare, verificarea `robots.txt`, sitemapului, canonicalurilor și trimiterea în Search Console.
 3. **Domeniu:** conectarea ulterioară a `masajlabirou.ro`, certificat HTTPS, redirecturi, actualizarea URL-ului canonic, a sitemapului și a datelor structurate.
 4. **E-mail:** crearea cutiilor sau a rutărilor confirmate de clientă, DNS pentru e-mail (MX, SPF, DKIM, DMARC), verificarea trimiterii și primirii. Până atunci, contactul rămâne prin telefon/WhatsApp.

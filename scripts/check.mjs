@@ -6,6 +6,20 @@ for (const path of pages) {
   for (const item of ['<html lang="ro">', '<main id="main"', '<h1 ', 'rel="canonical"', 'name="description"', 'application/ld+json']) {
     if (!html.includes(item)) throw new Error(`${path}: missing ${item}`);
   }
+  if (!html.includes(`rel="canonical" href="https://benvora-grup.avyron.eu${path}"`)) throw new Error(`${path}: incorrect canonical`);
+  if ([...html.matchAll(/<h1\b/g)].length !== 1) throw new Error(`${path}: expected exactly one h1`);
+  const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+  if (new Set(ids).size !== ids.length) throw new Error(`${path}: duplicate HTML id`);
+  for (const match of html.matchAll(/<img\b[^>]*>/g)) {
+    if (!/\balt="[^"]*"/.test(match[0])) throw new Error(`${path}: image without alt`);
+  }
+  for (const match of html.matchAll(/\b(?:href|src)="(\/[^"?#]*)[^\"]*"/g)) {
+    const target = match[1].startsWith('/assets/') ? `dist${match[1]}` : `dist${match[1]}index.html`;
+    try { await stat(target); } catch { throw new Error(`${path}: broken local reference ${match[1]}`); }
+  }
+  const jsonLd = html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1];
+  if (!jsonLd) throw new Error(`${path}: missing JSON-LD contents`);
+  JSON.parse(jsonLd);
   if (!html.includes('name="robots" content="noindex,nofollow"')) throw new Error(`${path}: public preview must be noindex`);
   if (!html.includes('Conectează-te / Înregistrează-te') || !html.includes('id="site-toast"')) throw new Error(`${path}: missing account announcement`);
   for (const legalPath of legalPages) {
