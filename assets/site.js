@@ -1,5 +1,6 @@
 const menuToggle = document.getElementById('menu-toggle');
 const sidebar = document.getElementById('sidebar');
+const sidebarClose = document.getElementById('sidebar-close');
 const scrim = document.getElementById('sidebar-scrim');
 const exploreToggle = document.getElementById('explore-toggle');
 const exploreMenu = document.getElementById('explore-menu');
@@ -11,14 +12,18 @@ function closeMenu() {
   scrim.hidden = true;
   document.body.style.overflow = '';
 }
-menuToggle.addEventListener('click', () => {
+menuToggle.addEventListener('click', event => {
   const open = !sidebar.classList.contains('is-open');
   sidebar.classList.toggle('is-open', open);
   menuToggle.setAttribute('aria-expanded', String(open));
   menuToggle.setAttribute('aria-label', open ? 'Închide meniul' : 'Deschide meniul');
   scrim.hidden = !open;
   document.body.style.overflow = open ? 'hidden' : '';
-  if (open) sidebar.querySelector('nav a').focus();
+  if (open && event.detail === 0) sidebar.querySelector('nav a').focus();
+});
+sidebarClose.addEventListener('click', event => {
+  closeMenu();
+  if (event.detail === 0) menuToggle.focus({ preventScroll: true });
 });
 scrim.addEventListener('click', closeMenu);
 sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
@@ -45,27 +50,25 @@ else desktopQuery.addListener(closeOnDesktop);
 
 const topbar = document.querySelector('.topbar');
 const floatingActions = document.querySelector('.float-actions');
+const floatingClearZones = [...document.querySelectorAll('.hero, .page-hero, .social-section, .footer')];
 let scrollFrame = 0;
-let previousScrollY = window.scrollY;
 function updateFloatingControls() {
   scrollFrame = 0;
   const currentScrollY = window.scrollY;
   const compact = currentScrollY > 72;
   topbar.classList.toggle('is-compact', compact);
   floatingActions.classList.toggle('is-compact', compact);
-  if (window.innerWidth <= 690) {
-    const movement = currentScrollY - previousScrollY;
-    if (currentScrollY < 100 || movement < -5) floatingActions.classList.remove('is-reading');
-    else if (currentScrollY > 180 && movement > 5) floatingActions.classList.add('is-reading');
-  } else {
-    floatingActions.classList.remove('is-reading');
-  }
-  previousScrollY = currentScrollY;
+  const clearForContent = window.innerWidth <= 690 && floatingClearZones.some(element => {
+    const rect = element.getBoundingClientRect();
+    return rect.top < window.innerHeight && rect.bottom > 0;
+  });
+  floatingActions.classList.toggle('is-context-hidden', clearForContent);
 }
 window.addEventListener('scroll', () => {
   if (!scrollFrame) scrollFrame = requestAnimationFrame(updateFloatingControls);
 }, { passive: true });
 window.addEventListener('pageshow', updateFloatingControls);
+window.addEventListener('resize', updateFloatingControls);
 updateFloatingControls();
 
 const siteToast = document.getElementById('site-toast');

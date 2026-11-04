@@ -39,6 +39,8 @@ for (const legalPath of legalPages) {
   if (sitemap.includes(legalPath)) throw new Error(`${legalPath}: legal draft appears in sitemap`);
 }
 const home = await readFile('dist/index.html', 'utf8');
+if (!/<source media="\(max-width: 900px\)" srcset="\/assets\/hero\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Mobile hero must use the complete original photo');
+if (!/<img src="\/assets\/hero-portrait\.jpg\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Desktop hero must use the portrait adaptation');
 if (!/<img src="\/assets\/service\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Service image should be a complete image, not a cropped background');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
 for (const name of ['TikTok', 'Instagram', 'Facebook']) {
@@ -50,8 +52,8 @@ const robots = await readFile('dist/robots.txt', 'utf8');
 if (!robots.includes('Disallow: /')) throw new Error('Public preview must disallow crawling');
 const headers = await readFile('dist/_headers', 'utf8');
 if (!headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Public preview needs noindex response header');
-for (const asset of ['hero.webp', 'service.webp']) {
+for (const asset of ['hero.webp', 'hero-portrait.jpg', 'service.webp']) {
   const size = (await stat(`dist/assets/${asset}`)).size;
-  if (size > 350_000) throw new Error(`${asset} too large: ${size}`);
+  if (size > (asset === 'hero-portrait.jpg' ? 650_000 : 350_000)) throw new Error(`${asset} too large: ${size}`);
   console.log(`OK ${asset} ${size} bytes`);
 }
