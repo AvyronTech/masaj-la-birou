@@ -14,12 +14,13 @@ Site de prezentare static, în limba română, pentru servicii de masaj la sediu
 
 ## Conținut și etape următoare
 
-- Benvora Grup este numele public confirmat de clientă. Logo-ul 3D este inclus în site; fișierul sursă se păstrează în `brand-private/`. CUI-ul și sediul social din documentul primit **nu** sunt publicate: clienta a cerut să aștepte validarea lor. Site-ul este o previzualizare publică, cu `noindex` în pagini și antete, plus `Disallow: /` în `robots.txt`.
+- Benvora Grup este numele public confirmat de clientă. Logo-ul 3D rafinat este inclus în site; sursa și exportul mare se păstrează în `brand-private/`. CUI-ul și sediul social din documentul primit **nu** sunt publicate: clienta a cerut să aștepte validarea lor. Site-ul este o previzualizare publică, cu `noindex` în pagini și antete, plus `Disallow: /` în `robots.txt`.
 - `contact@masajlabirou.ro`, `office@masajlabirou.ro` și `programari@masajlabirou.ro` sunt afișate explicit ca adrese **în curs de activare**. Nu există încă mailbox sau routing pentru domeniul clientei. Butonul Email duce la pagina Contact.
 - Pagina de confidențialitate este provizorie. Textul final trebuie validat de operatorul economic, împreună cu datele juridice, capitalul social, perioadele concrete de retenție și furnizorii folosiți după activarea e-mailului. La lansarea finală, setați `PREVIEW_MODE = false` în `scripts/build.mjs` și validați din nou conținutul și SEO.
 - Video-ul se adaugă după ce clienta trimite fișierul și confirmă drepturile de utilizare. Componenta actuală arată doar locul rezervat, fără autoplay sau transfer de date către un terț.
 - Imaginile generate sunt compoziții editoriale AI, nu fotografii reale ale echipei sau clienților.
-- Sursele PNG necomprimate pentru cele două scene sunt în `design-sources/` (1752 × 897 px), iar conceptul de logo în `brand-private/` (1254 × 1254 px). Fișierele WebP din `assets/` sunt variantele optimizate pentru web. Aceste surse nu sunt randări native 4K/8K; pentru materiale tipărite de mari dimensiuni trebuie produse separat imagini la rezoluția cerută.
+- Sursele PNG necomprimate pentru cele două scene sunt în `design-sources/` (1752 × 897 px), iar conceptul inițial și logo-ul rafinat sunt în `brand-private/`. `benvora-grup-logo-v2-4k.webp` are 4096 × 4096 px și este un export mărit din sursa AI de 1254 × 1254 px, nu o randare nativă 4K. `scripts/prepare-logo.py` (Python cu Pillow 12+) regenerează fișierele WebP optimizate pentru site și faviconul PNG. Scenele de pe site nu sunt randări native 4K/8K.
+- Intro-ul cinematic formează simbolul „B” din particule doar la prima vizită din sesiune. Se închide automat în aproximativ 1,5 secunde, are limită de siguranță dacă imaginea nu se încarcă și este omis pentru preferința de mișcare redusă sau economisirea datelor. Conținutul site-ului rămâne disponibil în HTML indiferent de intro.
 - Site-ul nu instalează cookie-uri de analiză, nu are formular care colectează date și nu încarcă fonturi ori scripturi externe.
 
 ## Domenii
