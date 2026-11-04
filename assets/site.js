@@ -46,11 +46,21 @@ else desktopQuery.addListener(closeOnDesktop);
 const topbar = document.querySelector('.topbar');
 const floatingActions = document.querySelector('.float-actions');
 let scrollFrame = 0;
+let previousScrollY = window.scrollY;
 function updateFloatingControls() {
   scrollFrame = 0;
-  const compact = window.scrollY > 72;
+  const currentScrollY = window.scrollY;
+  const compact = currentScrollY > 72;
   topbar.classList.toggle('is-compact', compact);
   floatingActions.classList.toggle('is-compact', compact);
+  if (window.innerWidth <= 690) {
+    const movement = currentScrollY - previousScrollY;
+    if (currentScrollY < 100 || movement < -5) floatingActions.classList.remove('is-reading');
+    else if (currentScrollY > 180 && movement > 5) floatingActions.classList.add('is-reading');
+  } else {
+    floatingActions.classList.remove('is-reading');
+  }
+  previousScrollY = currentScrollY;
 }
 window.addEventListener('scroll', () => {
   if (!scrollFrame) scrollFrame = requestAnimationFrame(updateFloatingControls);

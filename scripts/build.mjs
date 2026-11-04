@@ -1,9 +1,20 @@
-import { mkdir, copyFile, writeFile } from 'node:fs/promises';
+import { mkdir, copyFile, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const SITE_URL = 'https://benvora-grup.avyron.eu';
 // Public preview until the client validates the legal identification and email setup.
 const PREVIEW_MODE = true;
+const assetNames = ['hero.webp', 'service.webp', 'brand-logo.webp', 'brand-mark.webp', 'style.css', 'site.js', 'intro.js', 'favicon.png'];
+const assetVersions = {};
+const hashAsset = bytes => createHash('sha256').update(bytes).digest('hex').slice(0, 12);
+for (const name of assetNames.filter(name => name !== 'style.css')) {
+  assetVersions[name] = hashAsset(await readFile(join('assets', name)));
+}
+const versionAssetReferences = content => content.replace(/\/assets\/([a-z0-9.-]+)/gi, (path, name) =>
+  assetVersions[name] ? `${path}?v=${assetVersions[name]}` : path);
+const builtCss = versionAssetReferences(await readFile('assets/style.css', 'utf8'));
+assetVersions['style.css'] = hashAsset(builtCss);
 const CLIENT = Object.freeze({
   name: 'Benvora Grup',
   city: 'București',
@@ -55,7 +66,7 @@ const pages = [
     eyebrow: 'MASAJ LA BIROU · WELLBEING PENTRU ECHIPE',
     body: `
       <section class="hero" aria-labelledby="page-title">
-        <div class="hero-copy"><p class="eyebrow">BENVORA GRUP · MASAJ LA BIROU</p><h1 id="page-title">Masaj la birou, <span>în ritmul echipei.</span></h1><p class="lead">Oferă echipei o pauză de relaxare fără deplasări. Terapeutul vine la sediul companiei din București, iar sesiunile sunt planificate pe intervale potrivite programului de lucru.</p><div class="hero-actions"><a class="button button-primary" href="/contact/">Solicită o ofertă ${icon.arrow}</a><a class="button button-light" href="${WHATSAPP_DISCUSSION}" target="_blank" rel="noopener noreferrer">Programează o discuție</a></div><ul class="hero-highlights" aria-label="Avantajele serviciului"><li>La sediul companiei</li><li>Program flexibil</li><li>În București</li></ul></div>
+        <div class="hero-copy"><p class="eyebrow">BENVORA GRUP · MASAJ LA BIROU</p><h1 id="page-title">Masaj la birou, <span>în ritmul echipei.</span></h1><p class="lead">Masaj la sediul companiei, fără deplasări pentru echipă. Organizăm sesiunile în București, pe intervale potrivite programului de lucru.</p><div class="hero-actions"><a class="button button-primary" href="/contact/">Solicită o ofertă ${icon.arrow}</a><a class="button button-light" href="${WHATSAPP_DISCUSSION}" target="_blank" rel="noopener noreferrer">Programează o discuție</a></div><ul class="hero-highlights" aria-label="Avantajele serviciului"><li>La sediul companiei</li><li>Program flexibil</li><li>În București</li></ul></div>
         <figure class="hero-visual"><img src="/assets/hero.webp" width="1752" height="897" alt="Imagine ilustrativă: sesiune de masaj pe scaun într-un birou luminos" fetchpriority="high" decoding="async"><figcaption><span>WELLBEING PENTRU ECHIPE</span><strong>O pauză atent organizată.</strong><small>Imagine ilustrativă</small></figcaption></figure>
       </section>
       <section class="intro-grid section-pad" aria-labelledby="intro-title"><div><p class="eyebrow">UN BENEFICIU UȘOR DE INTEGRAT</p><h2 id="intro-title">Wellbeing care vine la birou.</h2></div><div><p class="large-copy">Compania stabilește ziua și intervalul disponibil, iar colegii se înscriu la sesiuni individuale. Terapeutul vine la sediu, astfel încât beneficiul să fie accesibil fără drumuri suplimentare sau schimbări mari în program.</p><a class="text-link" href="/masaj-la-birou/">Descoperă serviciul ${icon.arrow}</a></div></section>
@@ -79,7 +90,7 @@ const pages = [
     path: '/pentru-companii/', title: 'Wellbeing pentru companii | Benvora Grup',
     description: 'Masaj la birou pentru companii din București: zile de wellbeing, programe recurente, evenimente interne și organizare adaptată echipei.',
     heading: 'Pentru companii', eyebrow: 'WELLBEING PENTRU ECHIPE',
-    body: `${pageHero('WELLBEING PENTRU ECHIPE', 'Grija pentru oameni devine un gest concret.', 'Pentru birouri, centre de servicii și echipe administrative: o pauză de relaxare oferită direct la sediu, într-un format pe care îl stabilim împreună.')}
+    body: `${pageHero('WELLBEING PENTRU ECHIPE', 'Un beneficiu pentru echipă.', 'Pentru birouri, centre de servicii și echipe administrative: o pauză de relaxare oferită direct la sediu, într-un format pe care îl stabilim împreună.')}
       <section class="section-pad"><div class="section-heading"><div><p class="eyebrow">PENTRU ECHIPĂ ȘI HR</p><h2>Un serviciu util, ușor de administrat.</h2></div></div><div class="feature-grid"><article class="feature"><span class="feature-index">PENTRU ANGAJAȚI</span><h3>Relaxare accesibilă</h3><p>Colegii nu trebuie să plece de la sediu. Sesiunea se integrează într-un interval stabilit în prealabil.</p></article><article class="feature"><span class="feature-index">PENTRU HR</span><h3>Flexibilitate reală</h3><p>HR poate alege numărul de participanți, intervalul disponibil și frecvența; programul se ajustează după interesul echipei.</p></article><article class="feature"><span class="feature-index">PENTRU COMPANIE</span><h3>Organizare vizibilă</h3><p>Planificarea nominală și evidența sesiunilor fac mai ușoară administrarea beneficiului.</p></article></div></section>
       <section class="soft-section section-pad"><div class="section-heading"><div><p class="eyebrow">FORMATE</p><h2>Colaborarea se adaptează echipei.</h2></div></div><div class="format-list format-list-grid"><div><span>01</span><h3>Zi de wellbeing</h3><p>Un program punctual pentru echipă.</p></div><div><span>02</span><h3>Program recurent</h3><p>Sesiuni organizate periodic.</p></div><div><span>03</span><h3>Evenimente interne</h3><p>Masaj ca beneficiu în cadrul unui eveniment corporate.</p></div><div><span>04</span><h3>Program personalizat</h3><p>Construit în funcție de numărul de persoane și timpul disponibil.</p></div></div></section>
       <section class="section-pad"><div class="two-col"><div><p class="eyebrow">OFERTĂ PERSONALIZATĂ</p><h2>Ce ne ajută să știm?</h2></div><div><p>Pentru o primă propunere, avem nevoie de locația sediului, numărul aproximativ de participanți și ritmul dorit. Detaliile sesiunilor se stabilesc apoi direct cu persoana de contact.</p><a class="button button-primary" href="/contact/">Solicită o ofertă ${icon.arrow}</a></div></div></section>`
@@ -88,7 +99,7 @@ const pages = [
     path: '/despre-noi/', title: 'Despre noi | Benvora Grup',
     description: 'Benvora Grup organizează masaj de întreținere și relaxare la sediul companiilor, cu accent pe programări clare, discreție și colaborare B2B.',
     heading: 'Despre noi', eyebrow: 'ABORDAREA NOASTRĂ',
-    body: `${pageHero('ABORDAREA NOASTRĂ', 'O experiență atent organizată, de la prima discuție.', 'Aducem masajul de întreținere și relaxare mai aproape de angajați. Lucrăm cu companiile pentru ca programul să fie clar, accesibil și potrivit activității lor.')}
+    body: `${pageHero('ABORDAREA NOASTRĂ', 'Wellbeing organizat cu grijă.', 'Aducem masajul de întreținere și relaxare mai aproape de angajați. Lucrăm cu companiile pentru ca programul să fie clar, accesibil și potrivit activității lor.')}
       <section class="section-pad"><div class="two-col"><div><p class="eyebrow">CUM LUCRĂM</p><h2>Wellbeing mai aproape de oameni.</h2></div><div><p>Lucrăm direct cu persoana desemnată de companie. Stabilim zilele și intervalele, felul în care se înscriu colegii, personalul necesar și evidența sesiunilor. Astfel, fiecare program pornește de la nevoile reale ale echipei.</p><p>Ne dorim ca experiența să fie confortabilă pentru participanți și simplu de urmărit pentru organizație.</p></div></div></section>
       <section class="soft-section section-pad"><div class="section-heading"><div><p class="eyebrow">PRINCIPII</p><h2>Lucrurile pe care le urmărim la fiecare vizită.</h2></div></div><div class="principles"><article><span>01</span><h3>Profesionalism</h3><p>Serviciu organizat cu atenție și personal selectat pentru activitatea prestată.</p></article><article><span>02</span><h3>Punctualitate</h3><p>Respectăm programul convenit cu fiecare companie.</p></article><article><span>03</span><h3>Discreție</h3><p>O experiență confortabilă și respectuoasă pentru fiecare participant.</p></article><article><span>04</span><h3>Flexibilitate</h3><p>Adaptăm programul dimensiunii și ritmului organizației.</p></article></div></section>
       ${cta('Hai să construim o pauză pentru echipa ta.', 'Povestește-ne despre companie, iar noi revenim cu o variantă de program.')}`
@@ -133,7 +144,7 @@ function pageHero(eyebrow, heading, lead) {
 function cta(heading, lead) {
   return `<section class="cta-band section-pad"><div><p class="eyebrow eyebrow-light">HAI SĂ VORBIM</p><h2>${heading}</h2><p>${lead}</p></div><a class="button button-cream" href="/contact/">Solicită o ofertă ${icon.arrow}</a></section>`;
 }
-const introHead = '<script>try{if(!sessionStorage.getItem(\'benvora-intro-v2\')&&!matchMedia(\'(prefers-reduced-motion: reduce)\').matches&&!(navigator.connection&&navigator.connection.saveData)){document.documentElement.classList.add(\'intro-active\');sessionStorage.setItem(\'benvora-intro-v2\',\'1\')}}catch{}</script>';
+const introHead = '<script>try{if(!sessionStorage.getItem(\'benvora-intro-v3\')&&!matchMedia(\'(prefers-reduced-motion: reduce)\').matches&&!(navigator.connection&&navigator.connection.saveData)){document.documentElement.classList.add(\'intro-active\');sessionStorage.setItem(\'benvora-intro-v3\',\'1\')}}catch{}</script>';
 const introBody = '<div class="brand-intro" id="brand-intro" aria-hidden="true"><div class="brand-intro__content"><div class="brand-intro__mark"><img id="brand-intro-mark" src="/assets/brand-mark.webp" width="768" height="768" alt="" decoding="async"><canvas id="brand-intro-canvas" aria-hidden="true"></canvas></div><p class="brand-intro__wordmark">BENVORA <span>GRUP</span></p><p class="brand-intro__caption">WELLBEING PENTRU ECHIPE</p></div></div>';
 function layout(page) {
   const fullUrl = SITE_URL + page.path;
@@ -148,11 +159,12 @@ function layout(page) {
 }
 
 await mkdir('dist/assets', { recursive: true });
-for (const name of ['hero.webp', 'service.webp', 'brand-logo.webp', 'brand-mark.webp', 'style.css', 'site.js', 'intro.js', 'favicon.png']) await copyFile(join('assets', name), join('dist/assets', name));
+for (const name of assetNames.filter(name => name !== 'style.css')) await copyFile(join('assets', name), join('dist/assets', name));
+await writeFile('dist/assets/style.css', builtCss);
 for (const page of pages) {
   const dir = join('dist', page.path.slice(1));
   await mkdir(dir, { recursive: true });
-  await writeFile(join(dir, 'index.html'), layout(page));
+  await writeFile(join(dir, 'index.html'), versionAssetReferences(layout(page)));
 }
 const urls = pages.filter(p => !p.noindex).map(p => `  <url><loc>${SITE_URL}${p.path}</loc></url>`).join('\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
