@@ -39,3 +39,18 @@ document.addEventListener('keydown', event => {
   }
 });
 window.matchMedia('(min-width: 901px)').addEventListener('change', e => { if (e.matches) closeMenu(); });
+
+const topbar = document.querySelector('.topbar');
+const floatingActions = document.querySelector('.float-actions');
+let scrollFrame = 0;
+function updateFloatingControls() {
+  scrollFrame = 0;
+  const compact = window.scrollY > 72;
+  topbar.classList.toggle('is-compact', compact);
+  floatingActions.classList.toggle('is-compact', compact);
+}
+window.addEventListener('scroll', () => {
+  if (!scrollFrame) scrollFrame = requestAnimationFrame(updateFloatingControls);
+}, { passive: true });
+window.addEventListener('pageshow', updateFloatingControls);
+updateFloatingControls();
