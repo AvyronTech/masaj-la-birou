@@ -38,7 +38,10 @@ document.addEventListener('keydown', event => {
     if (!exploreMenu.hidden) { exploreMenu.hidden = true; exploreToggle.setAttribute('aria-expanded', 'false'); exploreToggle.focus(); }
   }
 });
-window.matchMedia('(min-width: 901px)').addEventListener('change', e => { if (e.matches) closeMenu(); });
+const desktopQuery = window.matchMedia('(min-width: 901px)');
+const closeOnDesktop = event => { if (event.matches) closeMenu(); };
+if (desktopQuery.addEventListener) desktopQuery.addEventListener('change', closeOnDesktop);
+else desktopQuery.addListener(closeOnDesktop);
 
 const topbar = document.querySelector('.topbar');
 const floatingActions = document.querySelector('.float-actions');
