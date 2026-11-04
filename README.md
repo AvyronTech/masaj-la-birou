@@ -4,7 +4,13 @@ Site de prezentare static, în limba română, pentru servicii de masaj la sediu
 
 ## Dezvoltare
 
-`npm run build` generează `dist/`, gata pentru Cloudflare Pages. Configurare Pages: ramura de producție `main`, comanda `npm run build`, director de ieșire `dist`. `npm run check` verifică paginile și metadatele. Pentru previzualizare locală: `python3 -m http.server 4173 -d dist`.
+`npm run build` generează `dist/`, gata pentru Cloudflare Pages. `npm run check` verifică paginile, metadatele și protecția de indexare a previzualizării. Pentru previzualizare locală: `python3 -m http.server 4173 -d dist`.
+
+## Publicare curentă
+
+- Proiect Cloudflare Pages: `benvora-grup`, creat prin Direct Upload. Buildul verificat din ramura `codex/benvora-site-2026-11-04` a fost încărcat manual. Public: `https://benvora-grup.avyron.eu/`; URL alternativ: `https://benvora-grup.pages.dev/`.
+- DNS `benvora-grup.avyron.eu` este CNAME proxied către `benvora-grup.pages.dev`. În zona `avyron.eu`, ruta Worker mai specifică `benvora-grup.avyron.eu/*` are **Worker None** și lasă cererile către Pages. Excepția este necesară deoarece ruta existentă `*.avyron.eu/*` a Workerului AVYRON ar răspunde cu demo 404.
+- Proiectul Pages nu are încă integrare automată cu GitHub. Conectarea ar acorda aplicației Cloudflare acces nou la repository și a fost respinsă de revizuirea automată a permisiunilor. Până la aprobarea explicită a acestui acces, actualizările se publică doar prin build verificat și Direct Upload. Sursa și istoricul rămân în repo-ul privat GitHub.
 
 ## Conținut și etape următoare
 
