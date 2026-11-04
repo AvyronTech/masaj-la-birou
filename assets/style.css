@@ -129,3 +129,37 @@
 @media(max-width:900px){.hero-visual{margin-right:15px}.footer-main{gap:25px}}
 @media(max-width:690px){.hero{min-height:0}.hero-visual{width:100%;height:auto;min-height:0;margin:0;border-radius:0 0 0 34px}.hero-visual img{height:auto;object-position:center}.hero-visual figcaption{max-width:none;padding:10px 6vw}.hero-visual figcaption strong{font-size:.82rem}.hero-visual figcaption small{margin-left:0}.video-visual{min-height:0}.section-pad,.intro-grid.section-pad{padding-top:54px;padding-bottom:54px}.video-section{padding-top:0}.footer{padding:35px 6vw 20px}.footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px;padding-bottom:24px}.footer-main>.footer-intro:first-child{grid-column:1/-1}.footer-legal{display:grid;gap:13px}.footer-preview{font-size:.67rem}.legal-grid{grid-template-columns:1fr;gap:14px}.legal-grid h2{font-size:1.45rem}}
 @media(max-width:420px){.hero-visual{height:auto;min-height:0}.footer-main{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-main>.footer-intro:first-child{grid-column:1/-1}.footer-brand img{width:48px;height:48px}.legal-notice{padding:17px 19px}}
+
+/* Account entry and social channels are honest about features still in preparation. */
+.explore-menu{width:285px}
+.explore-menu__footer{margin-top:7px;padding-top:9px;border-top:1px solid var(--line)}
+.account-button{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:47px;padding:10px 12px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:linear-gradient(145deg,#1d5550,#103d3a);color:#fff;font-size:.75rem;font-weight:750;line-height:1.3;text-align:left;cursor:pointer;box-shadow:0 9px 22px rgba(10,58,52,.18);transition:transform .2s,box-shadow .2s}
+.account-button:hover{transform:translateY(-2px);box-shadow:0 13px 27px rgba(10,58,52,.25)}
+.account-button svg{width:18px;height:18px;flex:none}
+.account-button--sidebar{margin-top:21px}
+.site-toast{position:fixed;right:88px;bottom:25px;z-index:90;max-width:min(360px,calc(100vw - 110px));padding:14px 17px;border:1px solid rgba(255,255,255,.5);border-radius:16px;background:rgba(18,61,56,.96);color:#fff;font-size:.84rem;font-weight:650;line-height:1.45;box-shadow:0 16px 45px rgba(8,40,36,.3);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.site-toast[hidden]{display:none}
+.social-section{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:clamp(24px,5vw,70px);background:linear-gradient(125deg,#e5ece5,#f2f0e9);border-top:1px solid #dce4dc}
+.social-section h2{max-width:580px;margin-bottom:16px}
+.social-section p:not(.eyebrow){max-width:540px;margin-bottom:0}
+.social-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.social-button{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:11px;min-height:128px;padding:17px;border:1px solid #d1ddd2;border-radius:19px;background:rgba(255,255,255,.78);color:#163d39;font:700 .91rem Inter,Arial,sans-serif;text-align:left;cursor:pointer;box-shadow:0 9px 26px rgba(21,67,54,.06);transition:transform .2s,box-shadow .2s,border-color .2s}
+.social-button:hover{transform:translateY(-4px);border-color:#91ad9d;box-shadow:0 14px 32px rgba(21,67,54,.11)}
+.social-button__symbol{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:#1f534d;color:#fff;font-size:.85rem}
+.social-button svg{align-self:flex-end}
+.social-button small{color:#55756a;font-size:.63rem;font-weight:750;letter-spacing:.03em}
+.social-button--pending{background:rgba(255,255,255,.62)}
+.faq-section{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,6vw,85px);background:#f5f1e9}
+.faq-section h2{max-width:520px}
+.faq-section>div>p:not(.eyebrow){max-width:490px}
+.faq-list{border-top:1px solid #c8d5c9}
+.faq-list details{padding:18px 2px;border-bottom:1px solid #c8d5c9}
+.faq-list summary{position:relative;padding-right:28px;color:#183d3a;font-size:1.05rem;font-weight:700;cursor:pointer;list-style:none}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list summary::after{content:'+';position:absolute;right:2px;top:-4px;color:#9b744c;font-size:1.5rem;font-weight:400}
+.faq-list details[open] summary::after{content:'−'}
+.faq-list details p{max-width:680px;margin:11px 0 0;font-size:.9rem}
+@media(max-width:1050px){.social-section{grid-template-columns:1fr}.social-actions{max-width:700px}}
+@media(max-width:690px){.social-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.social-button{min-height:116px;padding:12px;font-size:.76rem}.social-button__symbol{width:27px;height:27px}.social-button small{font-size:.58rem}.faq-section{grid-template-columns:1fr;gap:20px}.site-toast{left:16px;right:77px;bottom:19px;max-width:none}}
+@media(max-width:360px){.social-actions{grid-template-columns:1fr}.social-button{min-height:0;flex-direction:row;align-items:center}.social-button small{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){.account-button,.social-button{transition:none}}

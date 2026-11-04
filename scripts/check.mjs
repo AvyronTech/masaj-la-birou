@@ -7,6 +7,7 @@ for (const path of pages) {
     if (!html.includes(item)) throw new Error(`${path}: missing ${item}`);
   }
   if (!html.includes('name="robots" content="noindex,nofollow"')) throw new Error(`${path}: public preview must be noindex`);
+  if (!html.includes('Conectează-te / Înregistrează-te') || !html.includes('id="site-toast"')) throw new Error(`${path}: missing account announcement`);
   for (const legalPath of legalPages) {
     if (!html.includes(`href="${legalPath}"`)) throw new Error(`${path}: missing footer link to ${legalPath}`);
   }
@@ -19,6 +20,11 @@ for (const legalPath of legalPages) {
 const home = await readFile('dist/index.html', 'utf8');
 if (!home.includes('<img src="/assets/service.webp"')) throw new Error('Service image should be a complete image, not a cropped background');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
+for (const name of ['TikTok', 'Instagram', 'Facebook']) {
+  if (!home.includes(`Profilul Benvora Grup pe ${name} este în pregătire.`) && !home.includes(`aria-label="Benvora Grup pe ${name}"`)) throw new Error(`${name}: missing social channel`);
+}
+const service = await readFile('dist/masaj-la-birou/index.html', 'utf8');
+if (!service.includes('class="faq-list"')) throw new Error('Service page is missing practical questions');
 const robots = await readFile('dist/robots.txt', 'utf8');
 if (!robots.includes('Disallow: /')) throw new Error('Public preview must disallow crawling');
 const headers = await readFile('dist/_headers', 'utf8');

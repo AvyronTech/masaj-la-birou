@@ -54,3 +54,22 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 window.addEventListener('pageshow', updateFloatingControls);
 updateFloatingControls();
+
+const siteToast = document.getElementById('site-toast');
+let toastTimer;
+document.querySelectorAll('[data-coming-soon]').forEach(button => {
+  button.addEventListener('click', () => {
+    siteToast.textContent = button.dataset.comingSoon;
+    siteToast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { siteToast.hidden = true; }, 4500);
+    if (sidebar.contains(button)) {
+      closeMenu();
+      menuToggle.focus();
+    } else if (exploreMenu.contains(button)) {
+      exploreMenu.hidden = true;
+      exploreToggle.setAttribute('aria-expanded', 'false');
+      exploreToggle.focus();
+    }
+  });
+});
