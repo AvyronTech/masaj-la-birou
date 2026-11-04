@@ -1,9 +1,20 @@
-import { mkdir, copyFile, writeFile } from 'node:fs/promises';
+import { mkdir, copyFile, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const SITE_URL = 'https://benvora-grup.avyron.eu';
 // Public preview until the client validates the legal identification and email setup.
 const PREVIEW_MODE = true;
+const assetNames = ['hero.webp', 'service.webp', 'brand-logo.webp', 'brand-mark.webp', 'style.css', 'site.js', 'intro.js', 'favicon.png'];
+const assetVersions = {};
+const hashAsset = bytes => createHash('sha256').update(bytes).digest('hex').slice(0, 12);
+for (const name of assetNames.filter(name => name !== 'style.css')) {
+  assetVersions[name] = hashAsset(await readFile(join('assets', name)));
+}
+const versionAssetReferences = content => content.replace(/\/assets\/([a-z0-9.-]+)/gi, (path, name) =>
+  assetVersions[name] ? `${path}?v=${assetVersions[name]}` : path);
+const builtCss = versionAssetReferences(await readFile('assets/style.css', 'utf8'));
+assetVersions['style.css'] = hashAsset(builtCss);
 const CLIENT = Object.freeze({
   name: 'Benvora Grup',
   city: 'București',
@@ -133,7 +144,7 @@ function pageHero(eyebrow, heading, lead) {
 function cta(heading, lead) {
   return `<section class="cta-band section-pad"><div><p class="eyebrow eyebrow-light">HAI SĂ VORBIM</p><h2>${heading}</h2><p>${lead}</p></div><a class="button button-cream" href="/contact/">Solicită o ofertă ${icon.arrow}</a></section>`;
 }
-const introHead = '<script>try{if(!sessionStorage.getItem(\'benvora-intro-v2\')&&!matchMedia(\'(prefers-reduced-motion: reduce)\').matches&&!(navigator.connection&&navigator.connection.saveData)){document.documentElement.classList.add(\'intro-active\');sessionStorage.setItem(\'benvora-intro-v2\',\'1\')}}catch{}</script>';
+const introHead = '<script>try{if(!sessionStorage.getItem(\'benvora-intro-v3\')&&!matchMedia(\'(prefers-reduced-motion: reduce)\').matches&&!(navigator.connection&&navigator.connection.saveData)){document.documentElement.classList.add(\'intro-active\');sessionStorage.setItem(\'benvora-intro-v3\',\'1\')}}catch{}</script>';
 const introBody = '<div class="brand-intro" id="brand-intro" aria-hidden="true"><div class="brand-intro__content"><div class="brand-intro__mark"><img id="brand-intro-mark" src="/assets/brand-mark.webp" width="768" height="768" alt="" decoding="async"><canvas id="brand-intro-canvas" aria-hidden="true"></canvas></div><p class="brand-intro__wordmark">BENVORA <span>GRUP</span></p><p class="brand-intro__caption">WELLBEING PENTRU ECHIPE</p></div></div>';
 function layout(page) {
   const fullUrl = SITE_URL + page.path;
@@ -148,11 +159,12 @@ function layout(page) {
 }
 
 await mkdir('dist/assets', { recursive: true });
-for (const name of ['hero.webp', 'service.webp', 'brand-logo.webp', 'brand-mark.webp', 'style.css', 'site.js', 'intro.js', 'favicon.png']) await copyFile(join('assets', name), join('dist/assets', name));
+for (const name of assetNames.filter(name => name !== 'style.css')) await copyFile(join('assets', name), join('dist/assets', name));
+await writeFile('dist/assets/style.css', builtCss);
 for (const page of pages) {
   const dir = join('dist', page.path.slice(1));
   await mkdir(dir, { recursive: true });
-  await writeFile(join(dir, 'index.html'), layout(page));
+  await writeFile(join(dir, 'index.html'), versionAssetReferences(layout(page)));
 }
 const urls = pages.filter(p => !p.noindex).map(p => `  <url><loc>${SITE_URL}${p.path}</loc></url>`).join('\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);

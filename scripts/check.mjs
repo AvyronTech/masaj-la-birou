@@ -1,4 +1,5 @@
 import { readFile, stat } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 const legalPages = ['/confidentialitate/', '/cookie-uri/', '/termeni-si-conditii/'];
 const pages = ['/', '/masaj-la-birou/', '/pentru-companii/', '/despre-noi/', '/contact/', ...legalPages];
 for (const path of pages) {
@@ -17,6 +18,12 @@ for (const path of pages) {
     const target = match[1].startsWith('/assets/') ? `dist${match[1]}` : `dist${match[1]}index.html`;
     try { await stat(target); } catch { throw new Error(`${path}: broken local reference ${match[1]}`); }
   }
+  for (const match of html.matchAll(/\/assets\/([a-z0-9.-]+)(?:\?v=([a-f0-9]{12}))?/gi)) {
+    if (!match[2]) throw new Error(`${path}: unversioned asset ${match[1]}`);
+    const bytes = await readFile(`dist/assets/${match[1]}`);
+    const expected = createHash('sha256').update(bytes).digest('hex').slice(0, 12);
+    if (match[2] !== expected) throw new Error(`${path}: stale asset hash ${match[1]}`);
+  }
   const jsonLd = html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1];
   if (!jsonLd) throw new Error(`${path}: missing JSON-LD contents`);
   JSON.parse(jsonLd);
@@ -32,7 +39,7 @@ for (const legalPath of legalPages) {
   if (sitemap.includes(legalPath)) throw new Error(`${legalPath}: legal draft appears in sitemap`);
 }
 const home = await readFile('dist/index.html', 'utf8');
-if (!home.includes('<img src="/assets/service.webp"')) throw new Error('Service image should be a complete image, not a cropped background');
+if (!/<img src="\/assets\/service\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Service image should be a complete image, not a cropped background');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
 for (const name of ['TikTok', 'Instagram', 'Facebook']) {
   if (!home.includes(`Profilul Benvora Grup pe ${name} este în pregătire.`) && !home.includes(`aria-label="Benvora Grup pe ${name}"`)) throw new Error(`${name}: missing social channel`);
