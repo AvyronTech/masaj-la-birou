@@ -47,16 +47,21 @@ const icon = {
   chat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.4 7.53L3 20l.97-4.6A8.5 8.5 0 1 1 20 11.5Z"/><path d="M8.5 9c.6 2.5 2 4 4.5 5l1.5-1.2 2.2 1.1c-.6 1.4-1.4 2-2.5 2-3.6-.2-6.3-2.8-6.5-6.5 0-1 .4-1.7 1.1-2.4L10 8l-1.5 1Z"/></svg>',
   user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>',
 };
+const socialIcons = {
+  TikTok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v10.5a4.5 4.5 0 1 1-4.5-4.5"/><path d="M14 4c1.2 2.7 3.2 4 6 4"/></svg>',
+  Instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>',
+  Facebook: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3H14a4 4 0 0 0-4 4v3H7v4h3v7h4v-7h3l.5-4H14V7a1 1 0 0 1 1-1h1.5Z"/></svg>',
+};
 const socialNames = Object.keys(CLIENT.socialProfiles);
 const socialProfilesReady = socialNames.some(name => CLIENT.socialProfiles[name]);
 function socialSection() {
   const buttons = socialNames.map(name => {
     const url = CLIENT.socialProfiles[name];
     return url
-      ? `<a class="social-button" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Benvora Grup pe ${name}"><span class="social-button__symbol" aria-hidden="true">${name.slice(0, 1)}</span><span>${name}</span>${icon.arrow}</a>`
-      : `<button class="social-button social-button--pending" type="button" data-coming-soon="Profilul Benvora Grup pe ${name} este în pregătire."><span class="social-button__symbol" aria-hidden="true">${name.slice(0, 1)}</span><span>${name}</span><small>În curând</small></button>`;
+      ? `<a class="social-button" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Benvora Grup pe ${name}"><span class="social-button__symbol" aria-hidden="true">${socialIcons[name]}</span><span class="social-button__label">${name}</span><small>Urmărește ${icon.arrow}</small></a>`
+      : `<button class="social-button social-button--pending" type="button" data-coming-soon="Profilul Benvora Grup pe ${name} este în pregătire."><span class="social-button__symbol" aria-hidden="true">${socialIcons[name]}</span><span class="social-button__label">${name}</span><small>În pregătire</small></button>`;
   }).join('');
-  return `<section class="social-section section-pad" aria-labelledby="social-title"><div><p class="eyebrow">URMĂREȘTE-NE</p><h2 id="social-title">Mai aproape de echipele care își acordă o pauză.</h2><p>${socialProfilesReady ? 'Noutăți și idei despre masajul la birou, pe canalele noastre.' : 'Pregătim canalele Benvora Grup. Revino curând pentru noutăți și idei despre masajul la birou.'}</p></div><div class="social-actions" aria-label="Canalele sociale Benvora Grup">${buttons}</div></section>`;
+  return `<section class="social-section section-pad" aria-labelledby="social-title"><div><p class="eyebrow">URMĂREȘTE-NE</p><h2 id="social-title">Rămânem aproape.</h2><p>${socialProfilesReady ? 'Idei și noutăți despre masajul la birou, pe canalele noastre.' : 'Paginile Benvora Grup sunt în pregătire. Le activăm aici de îndată ce sunt disponibile.'}</p></div><div class="social-actions" aria-label="Canalele sociale Benvora Grup">${buttons}</div></section>`;
 }
 const pages = [
   {
