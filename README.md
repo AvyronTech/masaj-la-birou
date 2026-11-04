@@ -19,6 +19,7 @@ Site de prezentare static, în limba română, pentru servicii de masaj la sediu
 - Pagina de confidențialitate este provizorie. Textul final trebuie validat de operatorul economic, împreună cu datele juridice, capitalul social, perioadele concrete de retenție și furnizorii folosiți după activarea e-mailului. La lansarea finală, setați `PREVIEW_MODE = false` în `scripts/build.mjs` și validați din nou conținutul și SEO.
 - Video-ul se adaugă după ce clienta trimite fișierul și confirmă drepturile de utilizare. Componenta actuală arată doar locul rezervat, fără autoplay sau transfer de date către un terț.
 - Imaginile generate sunt compoziții editoriale AI, nu fotografii reale ale echipei sau clienților.
+- Sursele PNG necomprimate pentru cele două scene sunt în `design-sources/` (1752 × 897 px), iar conceptul de logo în `brand-private/` (1254 × 1254 px). Fișierele WebP din `assets/` sunt variantele optimizate pentru web. Aceste surse nu sunt randări native 4K/8K; pentru materiale tipărite de mari dimensiuni trebuie produse separat imagini la rezoluția cerută.
 - Site-ul nu instalează cookie-uri de analiză, nu are formular care colectează date și nu încarcă fonturi ori scripturi externe.
 
 ## Domenii
