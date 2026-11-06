@@ -30,6 +30,8 @@ for (const path of pages) {
   if (!html.includes('name="robots" content="noindex,nofollow"')) throw new Error(`${path}: public preview must be noindex`);
   if (html.includes('brand-intro') || html.includes('intro.js') || html.includes('intro-active')) throw new Error(`${path}: blocking intro must be removed`);
   if (!html.includes('Conectează-te / Înregistrează-te') || !html.includes('id="site-toast"')) throw new Error(`${path}: missing account announcement`);
+  if (!html.includes('id="menu-toggle"') || !html.includes('role="dialog" aria-modal="true" aria-label="Meniu de navigare"')) throw new Error(`${path}: missing accessible overlay menu`);
+  if (html.includes('id="explore-toggle"')) throw new Error(`${path}: duplicate navigation control remains`);
   for (const legalPath of legalPages) {
     if (!html.includes(`href="${legalPath}"`)) throw new Error(`${path}: missing footer link to ${legalPath}`);
   }
@@ -41,7 +43,7 @@ for (const legalPath of legalPages) {
 }
 const home = await readFile('dist/index.html', 'utf8');
 if (!/<source media="\(max-width: 1140px\)" type="image\/webp" srcset="\/assets\/hero-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/hero-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/hero\.webp\?v=[a-f0-9]{12} 1752w"/.test(home)) throw new Error('Narrow-view hero must offer both sizes of the complete original photo');
-if (!/<source media="\(min-width: 1141px\)" type="image\/webp" srcset="\/assets\/hero-portrait\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Desktop hero needs the efficient portrait image');
+if (!/<source media="\(min-width: 1141px\)" type="image\/webp" srcset="\/assets\/hero-portrait-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/hero-portrait\.webp\?v=[a-f0-9]{12} 1086w"/.test(home)) throw new Error('Desktop hero needs responsive portrait images');
 if (!/<img src="\/assets\/hero-portrait\.jpg\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Desktop hero must use the portrait adaptation');
 if (!/<img src="\/assets\/service-960\.webp\?v=[a-f0-9]{12}" srcset="\/assets\/service-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/service-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/service\.webp\?v=[a-f0-9]{12} 1752w"/.test(home)) throw new Error('Service image should be responsive and uncropped');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
@@ -62,9 +64,9 @@ if (!headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Publi
 try { await stat('dist/assets/intro.js'); throw new Error('Unused intro script is still shipped'); } catch (error) {
   if (error.code !== 'ENOENT') throw error;
 }
-for (const asset of ['hero.webp', 'hero-960.webp', 'hero-1280.webp', 'hero-portrait.jpg', 'hero-portrait.webp', 'service.webp', 'service-960.webp', 'service-1280.webp', 'brand-mark-192.webp', 'brand-mark-384.webp']) {
+for (const asset of ['hero.webp', 'hero-960.webp', 'hero-1280.webp', 'hero-portrait.jpg', 'hero-portrait.webp', 'hero-portrait-720.webp', 'service.webp', 'service-960.webp', 'service-1280.webp', 'brand-mark-192.webp', 'brand-mark-384.webp']) {
   const size = (await stat(`dist/assets/${asset}`)).size;
-  const limit = asset === 'hero-portrait.jpg' ? 650_000 : (/-(960|1280)\.webp$/.test(asset)) ? 100_000 : asset.startsWith('brand-mark-') ? 50_000 : 350_000;
+  const limit = asset === 'hero-portrait.jpg' ? 650_000 : (/-(720|960|1280)\.webp$/.test(asset)) ? 100_000 : asset.startsWith('brand-mark-') ? 50_000 : 350_000;
   if (size > limit) throw new Error(`${asset} too large: ${size}`);
   console.log(`OK ${asset} ${size} bytes`);
 }

@@ -3,8 +3,6 @@ const sidebar = document.getElementById('sidebar');
 const sidebarClose = document.getElementById('sidebar-close');
 const scrim = document.getElementById('sidebar-scrim');
 const pageArea = document.querySelector('.page-area');
-const exploreToggle = document.getElementById('explore-toggle');
-const exploreMenu = document.getElementById('explore-menu');
 
 function closeMenu() {
   const wasOpen = sidebar.classList.contains('is-open');
@@ -14,7 +12,7 @@ function closeMenu() {
   scrim.hidden = true;
   pageArea.inert = false;
   document.body.style.overflow = '';
-  if (wasOpen && window.innerWidth <= 900) menuToggle.focus({ preventScroll: true });
+  if (wasOpen) menuToggle.focus({ preventScroll: true });
 }
 menuToggle.addEventListener('click', () => {
   const open = !sidebar.classList.contains('is-open');
@@ -29,16 +27,6 @@ menuToggle.addEventListener('click', () => {
 sidebarClose.addEventListener('click', closeMenu);
 scrim.addEventListener('click', closeMenu);
 sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-exploreToggle.addEventListener('click', () => {
-  exploreMenu.hidden = !exploreMenu.hidden;
-  exploreToggle.setAttribute('aria-expanded', String(!exploreMenu.hidden));
-});
-document.addEventListener('click', event => {
-  if (!event.target.closest('.explore-wrap')) {
-    exploreMenu.hidden = true;
-    exploreToggle.setAttribute('aria-expanded', 'false');
-  }
-});
 document.addEventListener('keydown', event => {
   if (event.key === 'Tab' && sidebar.classList.contains('is-open')) {
     const focusable = [...sidebar.querySelectorAll('a, button')];
@@ -48,8 +36,7 @@ document.addEventListener('keydown', event => {
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   }
   if (event.key === 'Escape') {
-    if (sidebar.classList.contains('is-open')) { closeMenu(); menuToggle.focus(); }
-    if (!exploreMenu.hidden) { exploreMenu.hidden = true; exploreToggle.setAttribute('aria-expanded', 'false'); exploreToggle.focus(); }
+    if (sidebar.classList.contains('is-open')) closeMenu();
   }
 });
 const desktopQuery = window.matchMedia('(min-width: 901px)');
@@ -71,7 +58,10 @@ window.addEventListener('scroll', () => {
   if (!scrollFrame) scrollFrame = requestAnimationFrame(updateCompactControls);
 }, { passive: true });
 window.addEventListener('pageshow', event => {
-  if (event.persisted) updateCompactControls();
+  if (event.persisted) {
+    closeMenu();
+    updateCompactControls();
+  }
 });
 
 // IntersectionObserver does the visibility work without synchronous layout reads on scroll.
@@ -101,10 +91,6 @@ document.querySelectorAll('[data-coming-soon]').forEach(button => {
     if (sidebar.contains(button)) {
       closeMenu();
       menuToggle.focus();
-    } else if (exploreMenu.contains(button)) {
-      exploreMenu.hidden = true;
-      exploreToggle.setAttribute('aria-expanded', 'false');
-      exploreToggle.focus();
     }
   });
 });
