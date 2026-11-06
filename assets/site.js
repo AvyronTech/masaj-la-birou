@@ -94,21 +94,3 @@ document.querySelectorAll('[data-coming-soon]').forEach(button => {
     }
   });
 });
-
-const contactForm = document.getElementById('contact-form');
-if (contactForm) contactForm.addEventListener('submit', event => {
-  event.preventDefault();
-  if (!contactForm.reportValidity()) return;
-  const values = new FormData(contactForm);
-  const field = name => String(values.get(name) || '').trim();
-  const lines = [
-    'Bună ziua, Benvora Grup! Doresc o ofertă de masaj la birou.',
-    `Companie: ${field('company')}`,
-    `Persoană de contact: ${field('person')}`,
-    `Telefon sau e-mail: ${field('reply')}`,
-    `Participanți estimați: ${field('participants') || 'de stabilit'}`,
-    `Program dorit: ${field('schedule') || 'de stabilit'}`,
-  ];
-  if (field('message')) lines.push(`Alte detalii: ${field('message')}`);
-  window.location.href = `https://wa.me/${contactForm.dataset.whatsappNumber}?text=${encodeURIComponent(lines.join('\n'))}`;
-});
