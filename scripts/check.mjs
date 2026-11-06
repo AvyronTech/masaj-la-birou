@@ -42,10 +42,11 @@ for (const legalPath of legalPages) {
   if (sitemap.includes(legalPath)) throw new Error(`${legalPath}: legal draft appears in sitemap`);
 }
 const home = await readFile('dist/index.html', 'utf8');
-if (!/<source media="\(max-width: 1140px\)" type="image\/webp" srcset="\/assets\/hero-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/hero-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/hero\.webp\?v=[a-f0-9]{12} 1752w"/.test(home)) throw new Error('Narrow-view hero must offer both sizes of the complete original photo');
-if (!/<source media="\(min-width: 1141px\)" type="image\/webp" srcset="\/assets\/hero-portrait-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/hero-portrait\.webp\?v=[a-f0-9]{12} 1086w"/.test(home)) throw new Error('Desktop hero needs responsive portrait images');
-if (!/<img src="\/assets\/hero-portrait\.jpg\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Desktop hero must use the portrait adaptation');
-if (!/<img src="\/assets\/service-960\.webp\?v=[a-f0-9]{12}" srcset="\/assets\/service-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/service-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/service\.webp\?v=[a-f0-9]{12} 1752w"/.test(home)) throw new Error('Service image should be responsive and uncropped');
+if (!/<source type="image\/webp" srcset="\/assets\/hero-480\.webp\?v=[a-f0-9]{12} 480w, \/assets\/hero-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/hero-800\.webp\?v=[a-f0-9]{12} 800w, \/assets\/hero-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/hero-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/hero\.webp\?v=[a-f0-9]{12} 1752w" sizes="\(min-width: 1440px\) 760px, \(min-width: 1141px\) 44vw, 100vw"/.test(home)) throw new Error('Hero must offer progressive sizes of the complete original photo');
+if (!/<img src="\/assets\/hero\.webp\?v=[a-f0-9]{12}" width="1752" height="897"/.test(home)) throw new Error('Hero must retain the uncropped landscape source');
+if (home.includes('/assets/hero-portrait')) throw new Error('Oversized portrait hero should not be shipped');
+if (!/<img src="\/assets\/service-480\.webp\?v=[a-f0-9]{12}" srcset="\/assets\/service-480\.webp\?v=[a-f0-9]{12} 480w, \/assets\/service-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/service-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/service-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/service\.webp\?v=[a-f0-9]{12} 1752w" sizes="\(max-width: 690px\) 88vw, \(max-width: 1140px\) 65vw, 55vw"[^>]*loading="lazy" fetchpriority="low"/.test(home)) throw new Error('Service image should be progressively sized and lazy loaded');
+if (!/<img src="\/assets\/brand-mark-96\.webp\?v=[a-f0-9]{12}" srcset="\/assets\/brand-mark-96\.webp\?v=[a-f0-9]{12} 96w, \/assets\/brand-mark-192\.webp\?v=[a-f0-9]{12} 192w, \/assets\/brand-mark-384\.webp\?v=[a-f0-9]{12} 384w" sizes="\(max-width: 420px\) 48px, 55px"/.test(home)) throw new Error('Footer logo should use its displayed dimensions');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
 for (const name of ['TikTok', 'Instagram', 'Facebook']) {
   if (!home.includes(`Profilul Benvora Grup pe ${name} este în pregătire.`) && !home.includes(`aria-label="Benvora Grup pe ${name}"`)) throw new Error(`${name}: missing social channel`);
@@ -64,9 +65,9 @@ if (!headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Publi
 try { await stat('dist/assets/intro.js'); throw new Error('Unused intro script is still shipped'); } catch (error) {
   if (error.code !== 'ENOENT') throw error;
 }
-for (const asset of ['hero.webp', 'hero-960.webp', 'hero-1280.webp', 'hero-portrait.jpg', 'hero-portrait.webp', 'hero-portrait-720.webp', 'service.webp', 'service-960.webp', 'service-1280.webp', 'brand-mark-192.webp', 'brand-mark-384.webp']) {
+for (const asset of ['hero.webp', 'hero-480.webp', 'hero-720.webp', 'hero-800.webp', 'hero-960.webp', 'hero-1280.webp', 'service.webp', 'service-480.webp', 'service-720.webp', 'service-960.webp', 'service-1280.webp', 'brand-mark-96.webp', 'brand-mark-192.webp', 'brand-mark-384.webp']) {
   const size = (await stat(`dist/assets/${asset}`)).size;
-  const limit = asset === 'hero-portrait.jpg' ? 650_000 : (/-(720|960|1280)\.webp$/.test(asset)) ? 100_000 : asset.startsWith('brand-mark-') ? 50_000 : 350_000;
+  const limit = asset === 'brand-mark-96.webp' ? 5_000 : (/-(480|720|800)\.webp$/.test(asset)) ? 35_000 : (/-(960|1280)\.webp$/.test(asset)) ? 100_000 : asset.startsWith('brand-mark-') ? 50_000 : 350_000;
   if (size > limit) throw new Error(`${asset} too large: ${size}`);
   console.log(`OK ${asset} ${size} bytes`);
 }
