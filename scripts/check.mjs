@@ -52,6 +52,7 @@ const service = await readFile('dist/masaj-la-birou/index.html', 'utf8');
 if (!service.includes('class="faq-list"')) throw new Error('Service page is missing practical questions');
 const contact = await readFile('dist/contact/index.html', 'utf8');
 if (!contact.includes('id="contact-form"') || !contact.includes('Continuă pe WhatsApp')) throw new Error('Contact page needs the guided WhatsApp request');
+if ([...contact.matchAll(/<!--email_off--><strong>[^<]+@masajlabirou\.ro<\/strong><!--\/email_off-->/g)].length !== 4) throw new Error('Pending emails must stay readable without Cloudflare email-decoder script');
 const privacy = await readFile('dist/confidentialitate/index.html', 'utf8');
 if (!privacy.includes('Formularul de ofertă pregătește mesajul în browser')) throw new Error('Privacy page must describe the local form');
 const robots = await readFile('dist/robots.txt', 'utf8');
