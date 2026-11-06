@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 const SITE_URL = process.env.BENVORA_SITE_URL ?? 'https://benvora-grup.avyron.eu';
 const PREVIEW_MODE = (process.env.BENVORA_RELEASE_MODE ?? 'preview') === 'preview';
 const legalPages = ['/confidentialitate/', '/cookie-uri/', '/termeni-si-conditii/'];
-const pages = ['/', '/masaj-la-birou/', '/pentru-companii/', '/despre-noi/', '/contact/', ...legalPages];
+const pages = ['/', '/masaj-la-birou/', '/pentru-companii/', '/programari/', '/despre-noi/', '/contact/', ...legalPages];
 for (const path of pages) {
   const html = await readFile(`dist${path}index.html`, 'utf8');
   for (const item of ['<html lang="ro">', '<main id="main"', '<h1 ', 'rel="canonical"', 'name="description"', 'application/ld+json']) {
@@ -48,6 +48,8 @@ if (PREVIEW_MODE && sitemap.includes('<loc>')) throw new Error('Preview sitemap 
 if (!PREVIEW_MODE && [...sitemap.matchAll(/<loc>/g)].length !== pages.length - legalPages.length) throw new Error('Release sitemap must list all indexable pages');
 const home = await readFile('dist/index.html', 'utf8');
 if (!home.includes('<main id="main" class="home-main"')) throw new Error('Home needs scoped landing-page spacing');
+if (!home.includes('class="booking-teaser section-pad"') || !home.includes('href="/programari/">Deschide calendarul')) throw new Error('Home must link to the booking calendar');
+if (!home.includes('href="/contact/">Solicită ofertă') || !home.includes('class="topbar-cta" href="/contact/">Solicită ofertă')) throw new Error('Offer calls to action must use the same label');
 if (!home.includes('class="about-teaser section-pad"') || !home.includes('href="/despre-noi/">Mai multe despre noi')) throw new Error('Home must link its about introduction to the dedicated page');
 if (home.indexOf('class="about-teaser section-pad"') > home.indexOf('class="social-section section-pad"')) throw new Error('About introduction must precede social channels');
 if (!/<source type="image\/webp" srcset="\/assets\/hero-480\.webp\?v=[a-f0-9]{12} 480w, \/assets\/hero-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/hero-800\.webp\?v=[a-f0-9]{12} 800w, \/assets\/hero-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/hero-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/hero\.webp\?v=[a-f0-9]{12} 1752w" sizes="\(min-width: 1800px\) 760px, \(min-width: 1141px\) 44vw, \(min-width: 1000px\) 820px, \(min-width: 901px\) 82vw, 88vw"/.test(home)) throw new Error('Hero must offer progressive sizes of the complete original photo');
@@ -58,14 +60,21 @@ if (!/<img src="\/assets\/brand-mark-96\.webp\?v=[a-f0-9]{12}" srcset="\/assets\
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
 for (const name of ['TikTok', 'Instagram', 'Facebook']) {
   if (!home.includes(`Profilul Benvora Grup pe ${name} este în pregătire.`) && !home.includes(`aria-label="Benvora Grup pe ${name}"`)) throw new Error(`${name}: missing social channel`);
+  if (!home.includes(`social-button--${name.toLowerCase()}`)) throw new Error(`${name}: missing distinct social card styling`);
 }
 const service = await readFile('dist/masaj-la-birou/index.html', 'utf8');
 if (!service.includes('class="faq-list"')) throw new Error('Service page is missing practical questions');
 const contact = await readFile('dist/contact/index.html', 'utf8');
-if (!contact.includes('id="contact-form"') || !contact.includes('Continuă pe WhatsApp')) throw new Error('Contact page needs the guided WhatsApp request');
+if (!contact.includes('id="contact-form"') || !contact.includes('Continuă pe WhatsApp') || !contact.includes('data-open-email')) throw new Error('Contact page needs both guided message actions');
+if (!contact.includes('name="phone" type="tel"') || !contact.includes('name="email" type="email"') || !contact.includes('class="select-wrap"')) throw new Error('Offer form needs separate contact fields and a styled native selector');
+if (!contact.includes('<main id="main" class="request-main"') || contact.indexOf('class="contact-form-section') > contact.indexOf('class="contact-grid"')) throw new Error('Offer form should appear before secondary contact details');
 if ([...contact.matchAll(/<!--email_off--><strong>[^<]+@masajlabirou\.ro<\/strong><!--\/email_off-->/g)].length !== 4) throw new Error('Pending emails must stay readable without Cloudflare email-decoder script');
+const booking = await readFile('dist/programari/index.html', 'utf8');
+if (!booking.includes('id="booking-days"') || !booking.includes('id="booking-form"') || !booking.includes('data-open-email') || !booking.includes('name="slot"')) throw new Error('Booking page needs its calendar, interval selection and message actions');
+if (!booking.includes('Ziua și intervalul sunt preferințe, nu locuri rezervate.')) throw new Error('Booking calendar must not imply confirmed availability');
+if (!booking.includes('src="/assets/requests.js?v=') || !booking.includes('href="/assets/booking.css?v=')) throw new Error('Booking page needs its interactive assets');
 const privacy = await readFile('dist/confidentialitate/index.html', 'utf8');
-if (!privacy.includes('Formularul de ofertă pregătește mesajul în browser')) throw new Error('Privacy page must describe the local form');
+if (!privacy.includes('Formularele de ofertă și programare pregătesc mesaje în browser')) throw new Error('Privacy page must describe both local forms');
 const robots = await readFile('dist/robots.txt', 'utf8');
 if (!robots.includes('User-agent: *\nAllow: /')) throw new Error('Crawlers must be able to see noindex directives and the final sitemap');
 if (PREVIEW_MODE && robots.includes('Sitemap:')) throw new Error('Preview robots must not advertise an empty sitemap');
@@ -74,7 +83,7 @@ const headers = await readFile('dist/_headers', 'utf8');
 if (PREVIEW_MODE && !headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Public preview needs noindex response header');
 if (!PREVIEW_MODE && headers.includes('X-Robots-Tag: noindex')) throw new Error('Release headers must not block indexing globally');
 const llms = await readFile('dist/llms.txt', 'utf8');
-if (!llms.startsWith('# Benvora Grup') || !llms.includes(`](${SITE_URL}/masaj-la-birou/)`) || !llms.includes(`](${SITE_URL}/contact/)`)) throw new Error('llms.txt needs an H1 and real page links');
+if (!llms.startsWith('# Benvora Grup') || !llms.includes(`](${SITE_URL}/masaj-la-birou/)`) || !llms.includes(`](${SITE_URL}/programari/)`) || !llms.includes(`](${SITE_URL}/contact/)`)) throw new Error('llms.txt needs an H1 and real page links');
 const notFound = await readFile('dist/404.html', 'utf8');
 if (!notFound.includes('name="robots" content="noindex,follow"') || !notFound.includes('href="/contact/"')) throw new Error('Custom 404 must be useful and noindex');
 if (notFound.includes('rel="canonical"')) throw new Error('Custom 404 must not claim a canonical URL');

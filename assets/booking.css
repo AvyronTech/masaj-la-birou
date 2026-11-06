@@ -1,0 +1,55 @@
+.booking-section{background:#f8f7f2}
+.booking-section__intro{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:25px}
+.booking-section__intro .eyebrow{margin-bottom:10px}
+.booking-section__intro h2{max-width:670px;margin:0;font-size:clamp(1.9rem,3vw,3rem)}
+.booking-section__intro>p{max-width:390px;margin:0;font-size:.91rem}
+.booking-form{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);align-items:start;gap:20px}
+.booking-calendar-card,.booking-details{min-width:0;padding:clamp(20px,2.7vw,34px);border:1px solid #d9e3d8;border-radius:24px;background:#fff;box-shadow:0 14px 38px rgba(20,58,50,.055)}
+.booking-card-index{display:block;margin-bottom:10px;color:#845d37;font-size:.69rem;font-weight:800;letter-spacing:.17em}
+.booking-card-heading h3,.booking-details h3{margin:0 0 7px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.45rem,2vw,1.9rem);font-weight:400}
+.booking-card-heading p{margin:0;color:#526f66;font-size:.84rem}
+.booking-month-nav{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:10px;margin:24px 0 15px}
+.booking-month-nav strong{text-align:center;color:#173b3b;font-size:.95rem;text-transform:capitalize}
+.booking-month-nav button{display:grid;place-items:center;width:44px;height:44px;border:1px solid #cddbcf;border-radius:13px;background:#f7faf5;color:#18443e;font-size:1.6rem;line-height:1;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.booking-month-nav button:hover:not(:disabled){background:#e8f1e9;border-color:#8eb49b;transform:translateY(-2px)}
+.booking-month-nav button:disabled{opacity:.42;cursor:not-allowed}
+.booking-weekdays,.booking-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.booking-weekdays{margin-bottom:5px}
+.booking-weekdays span{padding:5px 0;text-align:center;color:#617a70;font-size:.7rem;font-weight:750}
+.booking-day,.booking-day-empty{display:grid;place-items:center;min-width:0;aspect-ratio:1}
+.booking-day{border:1px solid transparent;border-radius:11px;background:#f2f6f1;color:#183d39;font-size:.86rem;font-weight:700;cursor:pointer;transition:background .18s,transform .18s,box-shadow .18s}
+.booking-day:hover:not(:disabled){background:#deebdf;transform:translateY(-2px);box-shadow:0 5px 12px rgba(23,59,59,.1)}
+.booking-day.is-today{border-color:#b3926b}
+.booking-day.is-selected{border-color:#143a3a;background:#143a3a;color:#fff;box-shadow:0 7px 16px rgba(20,58,58,.19)}
+.booking-day:disabled{background:transparent;color:#9aaea3;cursor:not-allowed}
+.booking-day:focus-visible,.booking-month-nav button:focus-visible{outline:3px solid #d49d51;outline-offset:2px}
+.booking-selected{min-height:48px;margin:19px 0 0;padding:11px 14px;border:1px solid #e2e7dc;border-radius:12px;background:#f7f8f3;color:#4b695f;font-size:.84rem;line-height:1.5}
+.booking-selected.has-selection{border-color:#afcbb5;background:#eaf3ea;color:#16463c;font-weight:700}
+.booking-selected.has-error{border-color:#b47d6c;background:#fff4ef;color:#793f31}
+.booking-details h3{margin-bottom:21px}
+.booking-slots{min-width:0;margin:0 0 23px;padding:0;border:0}
+.booking-slots legend{margin-bottom:10px;color:#20433f;font-size:.82rem;font-weight:750}
+.booking-slot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.booking-slot-grid label{position:relative;min-width:0;cursor:pointer}
+.booking-slot-grid input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.booking-slot-grid span{display:grid;place-items:center;min-height:45px;padding:7px;border:1px solid #cbdacf;border-radius:12px;background:#f8faf6;color:#244c44;font-size:.82rem;font-weight:700;text-align:center;transition:background .18s,border-color .18s,transform .18s}
+.booking-slot-grid input:checked+span{border-color:#174c44;background:#e6f1e8;color:#163d39;box-shadow:inset 0 0 0 1px #174c44}
+.booking-slot-grid input:focus-visible+span{outline:3px solid #d49d51;outline-offset:2px}
+.booking-slot-grid label:hover span{transform:translateY(-2px);border-color:#8cae96}
+.booking-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.booking-fields label{display:grid;gap:7px;min-width:0;color:#20433f;font-size:.81rem;font-weight:700}
+.booking-fields__wide{grid-column:1/-1}
+.booking-fields input,.booking-fields textarea{width:100%;min-height:47px;padding:11px 13px;border:1px solid #b9cbbd;border-radius:11px;background:#fbfcf9;color:#153a38;font:400 .94rem Inter,"Helvetica Neue",Arial,sans-serif;line-height:1.4}
+.booking-fields textarea{min-height:85px;resize:vertical}
+.booking-fields input::placeholder,.booking-fields textarea::placeholder{color:#617970;opacity:1}
+.booking-fields input:focus-visible,.booking-fields textarea:focus-visible{outline:3px solid #d49d51;outline-offset:2px;border-color:#527869}
+.booking-disclaimer{margin:18px 0 0;color:#4d6b60;font-size:.8rem;line-height:1.55}
+.booking-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:19px}
+.booking-actions .button{min-height:48px;padding:10px 17px;border:1px solid transparent;cursor:pointer}
+.booking-actions .button-light{border-color:#cbdacf}
+.booking-email-note{margin:13px 0 0;color:#557268;font-size:.74rem;line-height:1.5}
+.booking-section noscript a{text-decoration:underline}
+@media(max-width:950px){.booking-form{grid-template-columns:1fr}.booking-section__intro{align-items:start}.booking-calendar-card,.booking-details{max-width:750px;width:100%;margin-inline:auto}}
+@media(max-width:690px){.booking-section__intro{display:block;margin-bottom:19px}.booking-section__intro>p{margin-top:11px}.booking-form{gap:13px}.booking-calendar-card,.booking-details{padding:18px;border-radius:19px}.booking-month-nav{margin-top:17px}.booking-fields{grid-template-columns:1fr;gap:13px}.booking-fields__wide{grid-column:auto}.booking-actions{display:grid;grid-template-columns:1fr}.booking-actions .button{width:100%}}
+@media(max-width:340px){.booking-calendar-card,.booking-details{padding:15px}.booking-weekdays,.booking-days{gap:3px}.booking-day{border-radius:8px;font-size:.8rem}.booking-slot-grid{gap:6px}.booking-slot-grid span{padding:5px;font-size:.76rem}}
+@media(prefers-reduced-motion:reduce){.booking-month-nav button,.booking-day,.booking-slot-grid span{transition:none}.booking-month-nav button:hover:not(:disabled),.booking-day:hover:not(:disabled),.booking-slot-grid label:hover span{transform:none}}

@@ -391,3 +391,51 @@
   .footer h2{margin:2px 0 9px}
   .footer-legal{gap:9px;padding-top:12px}
 }
+
+/* A concise route into the date-request calendar. */
+.booking-teaser.section-pad{display:grid;grid-template-columns:56px minmax(0,1fr) auto;align-items:center;gap:20px;padding-top:34px;padding-bottom:34px;border-block:1px solid #dbe5db;background:linear-gradient(125deg,#e8f0e9,#f7f4ec)}
+.booking-teaser__icon{display:grid;place-items:center;width:56px;height:56px;border:1px solid #bdd2c3;border-radius:17px;background:#fffdf9;color:#286051;box-shadow:0 9px 24px rgba(20,58,50,.08)}
+.booking-teaser__icon svg{width:25px;height:25px}
+.booking-teaser .eyebrow{margin-bottom:7px}
+.booking-teaser h2{margin:0 0 6px;font-size:clamp(1.5rem,2.3vw,2.3rem)}
+.booking-teaser p:not(.eyebrow){margin:0;font-size:.88rem;line-height:1.5}
+.booking-teaser .button{min-height:48px;padding:12px 19px;white-space:nowrap}
+@media(max-width:900px){.booking-teaser.section-pad{grid-template-columns:48px minmax(0,1fr);gap:12px 15px}.booking-teaser__icon{width:48px;height:48px}.booking-teaser .button{grid-column:1/-1;justify-self:start}}
+@media(max-width:690px){.booking-teaser.section-pad{padding-top:29px;padding-bottom:31px}.booking-teaser h2{font-size:clamp(1.6rem,6.5vw,2rem)}.booking-teaser .button{width:100%}}
+
+/* Distinct social identities, with restrained movement and readable labels. */
+.social-button{position:relative;isolation:isolate;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.social-button::before{content:"";position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;background:radial-gradient(circle at 25% 15%,rgba(255,255,255,.32),transparent 62%);transition:opacity .2s ease}
+.social-button__symbol,.social-button__label,.social-button small{position:relative;z-index:1}
+.social-button--tiktok{border-color:#1a3e47;background:linear-gradient(145deg,#101e27,#193640);color:#fff}
+.social-button--tiktok .social-button__symbol{background:#0e222a;color:#fff;box-shadow:-3px -2px 0 #49c9cc,3px 2px 0 #e56882}
+.social-button--tiktok small{color:#d4e9e7}
+.social-button--instagram{border-color:#e4bed0;background:linear-gradient(140deg,#fce0b7,#f4c5db 52%,#d9cdf5);color:#422c43}
+.social-button--instagram .social-button__symbol{background:linear-gradient(135deg,#f5a151,#cc4d88,#754ab6);color:#fff}
+.social-button--instagram small{color:#603b59}
+.social-button--facebook{border-color:#b7d1ed;background:linear-gradient(145deg,#eaf4ff,#c5dcf6);color:#183d73}
+.social-button--facebook .social-button__symbol{background:#1b5aab;color:#fff}
+.social-button--facebook small{color:#315580}
+@media(hover:hover){.social-button:hover{transform:translateY(-4px) scale(1.015);box-shadow:0 15px 32px rgba(21,67,54,.14)}.social-button:hover::before{opacity:1}.contact-card:hover{transform:translateY(-2px);border-color:#a3bcad;box-shadow:0 12px 28px rgba(20,58,50,.09)}.feature:hover{transform:translateY(-3px)}}
+.social-button--tiktok:hover{border-color:#4ec8c9}
+.social-button--instagram:hover{border-color:#be77ad}
+.social-button--facebook:hover{border-color:#6ea7e5}
+@media(prefers-reduced-motion:reduce){.social-button,.social-button::before,.contact-card,.feature{transition:none}.social-button:hover,.contact-card:hover,.feature:hover{transform:none}}
+
+/* Keep the native selector accessible while giving it a clear visual affordance. */
+.select-wrap{position:relative;display:block}
+.select-wrap::after{content:"";position:absolute;right:18px;top:50%;width:9px;height:9px;border-right:2px solid #325d53;border-bottom:2px solid #325d53;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.contact-form .select-wrap select{appearance:none;-webkit-appearance:none;padding-right:43px;background:linear-gradient(145deg,#fbfcf9,#f0f5ef);cursor:pointer}
+.contact-form .select-wrap select:hover{border-color:#759b84}
+.contact-form-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
+.contact-form-actions .button{min-height:48px;padding:10px 16px}
+.contact-form-actions .button-light{border:1px solid #c7d5c9}
+.contact-email-note{margin:14px 0 0;color:#547168;font-size:.75rem;line-height:1.5}
+@media(max-width:690px){.contact-form-actions{display:grid;grid-template-columns:1fr}.contact-form-actions .button{width:100%;white-space:normal}.contact-form-bottom{align-items:stretch}}
+
+/* The offer and booking pages reveal their useful controls soon after arrival. */
+.request-main .page-hero{padding-top:127px;padding-bottom:46px}
+.request-main .page-hero h1{max-width:920px;margin-bottom:13px;font-size:clamp(2.55rem,4.7vw,4.55rem)}
+.request-main .page-hero .lead{max-width:850px;font-size:1.05rem;line-height:1.6}
+.request-main>.section-pad{padding-top:54px;padding-bottom:58px}
+@media(max-width:690px){.request-main .page-hero{padding-top:108px;padding-bottom:33px}.request-main .page-hero h1{font-size:clamp(2.15rem,8.8vw,3.2rem)}.request-main>.section-pad{padding-top:37px;padding-bottom:43px}}
