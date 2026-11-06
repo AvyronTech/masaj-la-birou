@@ -52,24 +52,34 @@ const topbar = document.querySelector('.topbar');
 const floatingActions = document.querySelector('.float-actions');
 const floatingClearZones = [...document.querySelectorAll('.hero, .page-hero, .social-section, .footer')];
 let scrollFrame = 0;
-function updateFloatingControls() {
+function updateCompactControls() {
   scrollFrame = 0;
-  const currentScrollY = window.scrollY;
-  const compact = currentScrollY > 72;
+  const compact = window.scrollY > 72;
   topbar.classList.toggle('is-compact', compact);
   floatingActions.classList.toggle('is-compact', compact);
-  const clearForContent = window.innerWidth <= 690 && floatingClearZones.some(element => {
-    const rect = element.getBoundingClientRect();
-    return rect.top < window.innerHeight && rect.bottom > 0;
-  });
-  floatingActions.classList.toggle('is-context-hidden', clearForContent);
 }
 window.addEventListener('scroll', () => {
-  if (!scrollFrame) scrollFrame = requestAnimationFrame(updateFloatingControls);
+  if (!scrollFrame) scrollFrame = requestAnimationFrame(updateCompactControls);
 }, { passive: true });
-window.addEventListener('pageshow', updateFloatingControls);
-window.addEventListener('resize', updateFloatingControls);
-updateFloatingControls();
+window.addEventListener('pageshow', event => {
+  if (event.persisted) updateCompactControls();
+});
+
+// IntersectionObserver does the visibility work without synchronous layout reads on scroll.
+if ('IntersectionObserver' in window) {
+  const observed = new Set();
+  const visible = new Set();
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      observed.add(entry.target);
+      if (entry.isIntersecting) visible.add(entry.target);
+      else visible.delete(entry.target);
+    }
+    floatingActions.classList.toggle('is-context-hidden', visible.size > 0);
+    if (observed.size === floatingClearZones.length) floatingActions.classList.add('is-ready');
+  });
+  floatingClearZones.forEach(element => observer.observe(element));
+}
 
 const siteToast = document.getElementById('site-toast');
 let toastTimer;

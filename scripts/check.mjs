@@ -28,6 +28,7 @@ for (const path of pages) {
   if (!jsonLd) throw new Error(`${path}: missing JSON-LD contents`);
   JSON.parse(jsonLd);
   if (!html.includes('name="robots" content="noindex,nofollow"')) throw new Error(`${path}: public preview must be noindex`);
+  if (html.includes('brand-intro') || html.includes('intro.js') || html.includes('intro-active')) throw new Error(`${path}: blocking intro must be removed`);
   if (!html.includes('Conectează-te / Înregistrează-te') || !html.includes('id="site-toast"')) throw new Error(`${path}: missing account announcement`);
   for (const legalPath of legalPages) {
     if (!html.includes(`href="${legalPath}"`)) throw new Error(`${path}: missing footer link to ${legalPath}`);
@@ -39,7 +40,7 @@ for (const legalPath of legalPages) {
   if (sitemap.includes(legalPath)) throw new Error(`${legalPath}: legal draft appears in sitemap`);
 }
 const home = await readFile('dist/index.html', 'utf8');
-if (!/<source media="\(max-width: 900px\)" srcset="\/assets\/hero\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Mobile hero must use the complete original photo');
+if (!/<source media="\(max-width: 1140px\)" srcset="\/assets\/hero\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Narrow-view hero must use the complete original photo');
 if (!/<img src="\/assets\/hero-portrait\.jpg\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Desktop hero must use the portrait adaptation');
 if (!/<img src="\/assets\/service\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Service image should be a complete image, not a cropped background');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
@@ -52,6 +53,9 @@ const robots = await readFile('dist/robots.txt', 'utf8');
 if (!robots.includes('Disallow: /')) throw new Error('Public preview must disallow crawling');
 const headers = await readFile('dist/_headers', 'utf8');
 if (!headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Public preview needs noindex response header');
+try { await stat('dist/assets/intro.js'); throw new Error('Unused intro script is still shipped'); } catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
 for (const asset of ['hero.webp', 'hero-portrait.jpg', 'service.webp']) {
   const size = (await stat(`dist/assets/${asset}`)).size;
   if (size > (asset === 'hero-portrait.jpg' ? 650_000 : 350_000)) throw new Error(`${asset} too large: ${size}`);

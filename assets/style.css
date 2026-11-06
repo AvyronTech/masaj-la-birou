@@ -8,25 +8,6 @@
 
 .footer-brand img{width:158px;height:158px;object-fit:cover;border-radius:17px;border:1px solid rgba(198,163,118,.25)}
 
-/* A short, first-visit brand introduction; the page remains in the DOM. */
-.brand-intro{display:none}
-.intro-active .brand-intro{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;color:#efcc91;background:radial-gradient(circle at 50% 44%,#114643 0%,#062b2b 38%,#031e20 78%);animation:intro-safety 2.45s forwards}
-.brand-intro::before{content:"";position:absolute;inset:-35%;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(211,166,103,.09),transparent 34%);transform:scale(.85);animation:intro-ambience 1.5s ease-out both}
-.brand-intro__content{position:relative;display:grid;justify-items:center;width:min(88vw,460px);padding:24px 12px 40px;text-align:center}
-.brand-intro__mark{position:relative;width:clamp(190px,26vw,300px);aspect-ratio:1;isolation:isolate}
-.brand-intro__mark img{width:100%;height:100%;object-fit:cover;mix-blend-mode:screen;opacity:0;animation:intro-mark-reveal .65s .75s ease-out forwards}
-.brand-intro__mark canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.brand-intro__wordmark{margin:5px 0 0;color:#f2d7a9;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.15rem,3vw,1.65rem);line-height:1.2;letter-spacing:.22em;white-space:nowrap;text-shadow:0 1px 16px rgba(227,173,101,.22);animation:intro-type-reveal .85s .28s both}
-.brand-intro__wordmark span{color:#d8aa6e}
-.brand-intro__caption{margin:13px 0 0;color:#aecac1;font-size:.63rem;font-weight:700;line-height:1.4;letter-spacing:.23em;animation:intro-type-reveal .9s .42s both}
-.brand-intro.is-leaving{animation:none;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .32s ease,visibility .32s ease}
-@keyframes intro-safety{0%,80%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
-@keyframes intro-ambience{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-@keyframes intro-mark-reveal{0%{opacity:.08;filter:blur(7px)}60%{opacity:.28;filter:blur(2px)}100%{opacity:1;filter:blur(0)}}
-@keyframes intro-type-reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:480px){.brand-intro__content{padding-bottom:30px}.brand-intro__mark{width:min(46vw,180px)}.brand-intro__wordmark{font-size:clamp(1rem,5.3vw,1.35rem);letter-spacing:.16em}.brand-intro__caption{font-size:.56rem;letter-spacing:.18em}}
-@media(prefers-reduced-motion:reduce){.intro-active .brand-intro{display:none!important}}
-
 /* Readable small labels on light surfaces, while keeping the warm palette. */
 .brand-name>span,.topbar-home>span{color:#765435}
 .brand-name small,.sidebar-caption,.topbar-caption,.contact-card small{color:#52665c}
@@ -268,3 +249,38 @@
 }
 @media(max-width:360px){.sidebar{padding-left:14px;padding-right:14px}.sidebar-caption{margin-top:18px}.sidebar nav a{min-height:52px}}
 @media(max-width:900px) and (max-height:600px){.sidebar-caption{margin-top:10px}.sidebar nav a{min-height:48px}.sidebar-bottom{padding-top:8px}}
+
+/* The glass appearance uses paint-only layers. Large live blur filters can stall older GPUs. */
+.topbar,.topbar.is-compact{transform:none;-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(244,249,246,.96));transition:top .2s ease,background .2s ease,box-shadow .2s ease}
+.topbar.is-compact{min-height:58px;padding-top:6px;padding-bottom:6px;box-shadow:0 8px 24px rgba(12,49,46,.12),inset 0 1px 0 #fff}
+.explore-menu,.hero-visual figcaption,.site-toast,.float-actions a{-webkit-backdrop-filter:none;backdrop-filter:none}
+.explore-menu{background:#fff}
+.hero-visual figcaption{background:rgba(255,253,248,.95)}
+.float-actions a{background:linear-gradient(150deg,#327267,#103a37)}
+.float-actions a:nth-child(2){background:linear-gradient(150deg,#318c6c,#17654e)}
+.float-actions a:nth-child(3){background:linear-gradient(150deg,#ad8558,#785333)}
+@media(max-width:900px){.sidebar,.sidebar-close,.sidebar-scrim:not([hidden]){-webkit-backdrop-filter:none;backdrop-filter:none}.sidebar{background:linear-gradient(150deg,#fff,#f2f8f3)}}
+@media(max-width:690px){.float-actions{-webkit-backdrop-filter:none;backdrop-filter:none}.topbar.is-compact{min-height:53px}}
+@media(max-width:690px){.float-actions:not(.is-ready){opacity:0;visibility:hidden;pointer-events:none}}
+
+/* Laptop widths need the complete landscape photo and readable text beside the sidebar. */
+@media(min-width:901px) and (max-width:1140px){
+  .hero{display:flex;flex-direction:column;min-height:0;align-items:stretch;overflow:visible;padding-top:88px}
+  .hero-copy{width:100%;padding:42px clamp(30px,6vw,70px) 34px}
+  .hero h1{max-width:750px;font-size:clamp(2.65rem,5vw,3.65rem)}
+  .hero .lead{max-width:720px}
+  .hero-visual{width:100%;height:auto;min-height:0;align-self:auto;margin:0;border-radius:0 0 0 45px;box-shadow:none}
+  .hero-visual picture{position:static;display:block;width:100%;height:auto}
+  .hero-visual img{display:block;width:100%;height:auto;aspect-ratio:1752/897;object-fit:contain}
+  .hero-visual::after{display:none}
+  .hero-visual figcaption{position:static;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;max-width:none;padding:11px clamp(30px,6vw,70px);border:0;border-radius:0;background:#f5f4ed;box-shadow:none}
+  .hero-visual figcaption small{margin-left:auto}
+}
+@media(min-width:901px) and (max-height:730px){
+  .sidebar{padding-top:22px;padding-bottom:18px}
+  .sidebar-caption{margin-top:30px}
+  .sidebar nav a{min-height:53px}
+  .sidebar-bottom{padding-top:12px}
+  .sidebar-bottom p{margin-bottom:9px}
+  .account-button--sidebar{margin-top:10px}
+}
