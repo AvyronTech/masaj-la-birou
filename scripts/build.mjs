@@ -32,7 +32,8 @@ const whatsappLink = message => `https://wa.me/${PHONE.replace('+', '')}?text=${
 const WHATSAPP_QUICK = whatsappLink(`Bună ziua, ${CLIENT.name}! Doresc detalii despre masajul la birou pentru o echipă din ${CLIENT.city}.\nCompanie: \nNumăr estimat de participanți: \nFrecvență dorită: `);
 const WHATSAPP_OFFER = whatsappLink(`Bună ziua, ${CLIENT.name}! Aș dori o ofertă pentru masaj la birou.\nCompanie: \nLocația sediului (${CLIENT.city}): \nNumăr estimat de participanți: \nZiua sau frecvența dorită: \nTipul programului (punctual / recurent / eveniment): `);
 const WHATSAPP_DISCUSSION = whatsappLink(`Bună ziua, ${CLIENT.name}! Aș dori să programăm o scurtă discuție despre masajul la birou pentru compania noastră.\nCompanie: \nIntervalul potrivit pentru apel: `);
-const emailList = CLIENT.pendingEmails.map(local => `<strong>${local}@${CLIENT.futureDomain}</strong>`).join('');
+// Prevent Cloudflare's zone-wide email obfuscation from injecting a decoder into this static page.
+const emailList = CLIENT.pendingEmails.map(local => `<!--email_off--><strong>${local}@${CLIENT.futureDomain}</strong><!--/email_off-->`).join('');
 const nav = [
   ['/', 'Acasă', '01'],
   ['/masaj-la-birou/', 'Masaj la birou', '02'],
