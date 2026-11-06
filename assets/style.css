@@ -303,3 +303,37 @@
 @media(max-width:690px){.contact-form-section{gap:14px}.contact-form{padding:19px;border-radius:19px}.contact-form-fields{grid-template-columns:1fr;gap:15px}.contact-form-wide{grid-column:auto}.contact-form-bottom{display:grid;gap:16px}.contact-form-bottom .button{width:100%;min-height:50px}}
 @media(max-width:900px){.sidebar:not(.is-open){visibility:hidden;pointer-events:none}.sidebar.is-open{visibility:visible}}
 .video-visual img{aspect-ratio:1752/897}
+
+/* The navigation is a compact overlay at every viewport width. */
+.site-shell{display:block}
+.page-area{width:100%}
+.mobile-menu{display:grid;order:3;place-content:center;gap:4px;width:44px;height:44px;flex:none;border:1px solid rgba(74,111,101,.22);border-radius:13px;background:rgba(255,255,255,.58);color:var(--ink);cursor:pointer}
+.mobile-menu span{display:block;width:19px;height:2px;border-radius:3px;background:currentColor}
+.topbar-home{order:1;min-width:0;margin-right:auto}
+.topbar-actions{order:2;flex:0 1 auto}
+.explore-wrap{display:none}
+.sidebar,.sidebar.is-open{position:fixed;left:auto;right:clamp(12px,2vw,30px);top:88px;bottom:auto;z-index:70;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;width:min(352px,calc(100vw - 24px));height:auto;max-height:calc(100vh - 102px);max-height:calc(100dvh - 102px);margin:0;padding:17px 18px 16px;overflow:hidden;border:1px solid rgba(153,178,163,.55);border-radius:21px;background:linear-gradient(150deg,#fff,#f1f8f2);box-shadow:0 20px 55px rgba(9,42,40,.22),inset 0 1px 0 #fff;-webkit-backdrop-filter:none;backdrop-filter:none;transform-origin:top right}
+.sidebar{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-9px) scale(.98);transition:opacity .18s ease,transform .18s ease}
+.sidebar.is-open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.sidebar .brand{min-width:0;padding:0 44px 0 0}
+.sidebar .brand-mark{width:42px;height:42px;flex:none;border-radius:13px}
+.sidebar .brand-name{min-width:0;font-size:.92rem;line-height:1.14}
+.sidebar .brand-name small{font-size:.43rem;letter-spacing:.12em}
+.sidebar-close{position:absolute;top:15px;right:15px;z-index:2;display:grid;place-items:center;width:42px;height:42px;border:1px solid #c8d8cd;border-radius:13px;background:rgba(255,255,255,.82);color:var(--ink);cursor:pointer;-webkit-backdrop-filter:none;backdrop-filter:none}
+.sidebar-close svg{width:19px;height:19px}
+.sidebar-caption{margin:16px 0 5px;font-size:.62rem;color:#516f62}
+.sidebar nav{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.sidebar nav ul{display:block;min-height:0}
+.sidebar nav a{min-height:44px;padding:8px 4px;font-size:.84rem}
+.sidebar nav a:hover,.sidebar nav a[aria-current="page"]{padding-left:9px}
+.sidebar-bottom{margin-top:8px;padding:10px 0 0;border-top:1px solid var(--line)}
+.sidebar-bottom p{display:none}
+.sidebar-bottom a{display:inline-flex;align-items:center;min-height:25px;font-size:.78rem}
+.account-button--sidebar{min-height:46px;margin-top:8px;padding:8px 10px;font-size:.75rem}
+.sidebar-scrim:not([hidden]){position:fixed;inset:0;z-index:59;background:rgba(8,32,31,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
+@media(max-width:900px){.sidebar,.sidebar.is-open{top:78px;right:12px;max-height:calc(100vh - 90px);max-height:calc(100dvh - 90px)}.topbar-home{margin-right:auto}}
+@media(max-width:360px){.sidebar,.sidebar.is-open{right:8px;width:calc(100vw - 16px);padding-left:14px;padding-right:14px}.sidebar-close{right:12px}.sidebar-caption{margin-top:13px}.sidebar nav a{min-height:42px}.mobile-menu{width:42px;height:42px}}
+@media(max-width:300px){.topbar-cta{display:none}.topbar-home{font-size:.9rem}}
+@media(max-height:600px){.sidebar,.sidebar.is-open{max-height:calc(100vh - 92px);max-height:calc(100dvh - 92px)}.sidebar-caption{margin-top:10px}.sidebar nav a{min-height:40px}}
+@media(min-width:1440px){.section-pad{padding-left:max(6vw,calc((100vw - 1440px)/2));padding-right:max(6vw,calc((100vw - 1440px)/2))}}
+@media(prefers-reduced-motion:reduce){.sidebar{transition:none}}
