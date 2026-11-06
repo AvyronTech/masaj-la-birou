@@ -2,29 +2,31 @@ const menuToggle = document.getElementById('menu-toggle');
 const sidebar = document.getElementById('sidebar');
 const sidebarClose = document.getElementById('sidebar-close');
 const scrim = document.getElementById('sidebar-scrim');
+const pageArea = document.querySelector('.page-area');
 const exploreToggle = document.getElementById('explore-toggle');
 const exploreMenu = document.getElementById('explore-menu');
 
 function closeMenu() {
+  const wasOpen = sidebar.classList.contains('is-open');
   sidebar.classList.remove('is-open');
   menuToggle.setAttribute('aria-expanded', 'false');
   menuToggle.setAttribute('aria-label', 'Deschide meniul');
   scrim.hidden = true;
+  pageArea.inert = false;
   document.body.style.overflow = '';
+  if (wasOpen && window.innerWidth <= 900) menuToggle.focus({ preventScroll: true });
 }
-menuToggle.addEventListener('click', event => {
+menuToggle.addEventListener('click', () => {
   const open = !sidebar.classList.contains('is-open');
   sidebar.classList.toggle('is-open', open);
   menuToggle.setAttribute('aria-expanded', String(open));
   menuToggle.setAttribute('aria-label', open ? 'Închide meniul' : 'Deschide meniul');
   scrim.hidden = !open;
+  pageArea.inert = open;
   document.body.style.overflow = open ? 'hidden' : '';
-  if (open && event.detail === 0) sidebar.querySelector('nav a').focus();
+  if (open) sidebarClose.focus({ preventScroll: true });
 });
-sidebarClose.addEventListener('click', event => {
-  closeMenu();
-  if (event.detail === 0) menuToggle.focus({ preventScroll: true });
-});
+sidebarClose.addEventListener('click', closeMenu);
 scrim.addEventListener('click', closeMenu);
 sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 exploreToggle.addEventListener('click', () => {
@@ -38,6 +40,13 @@ document.addEventListener('click', event => {
   }
 });
 document.addEventListener('keydown', event => {
+  if (event.key === 'Tab' && sidebar.classList.contains('is-open')) {
+    const focusable = [...sidebar.querySelectorAll('a, button')];
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
   if (event.key === 'Escape') {
     if (sidebar.classList.contains('is-open')) { closeMenu(); menuToggle.focus(); }
     if (!exploreMenu.hidden) { exploreMenu.hidden = true; exploreToggle.setAttribute('aria-expanded', 'false'); exploreToggle.focus(); }
@@ -98,4 +107,22 @@ document.querySelectorAll('[data-coming-soon]').forEach(button => {
       exploreToggle.focus();
     }
   });
+});
+
+const contactForm = document.getElementById('contact-form');
+if (contactForm) contactForm.addEventListener('submit', event => {
+  event.preventDefault();
+  if (!contactForm.reportValidity()) return;
+  const values = new FormData(contactForm);
+  const field = name => String(values.get(name) || '').trim();
+  const lines = [
+    'Bună ziua, Benvora Grup! Doresc o ofertă de masaj la birou.',
+    `Companie: ${field('company')}`,
+    `Persoană de contact: ${field('person')}`,
+    `Telefon sau e-mail: ${field('reply')}`,
+    `Participanți estimați: ${field('participants') || 'de stabilit'}`,
+    `Program dorit: ${field('schedule') || 'de stabilit'}`,
+  ];
+  if (field('message')) lines.push(`Alte detalii: ${field('message')}`);
+  window.location.href = `https://wa.me/${contactForm.dataset.whatsappNumber}?text=${encodeURIComponent(lines.join('\n'))}`;
 });
