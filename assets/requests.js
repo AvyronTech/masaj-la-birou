@@ -2,7 +2,7 @@ const offerForm = document.getElementById('contact-form');
 const bookingForm = document.getElementById('booking-form');
 
 const readField = (data, name) => String(data.get(name) || '').trim();
-const destination = form => form.dataset.emailRecipient;
+const destination = form => `${form.dataset.emailLocal}@${form.dataset.emailDomain}`;
 const whatsappUrl = (form, message) =>
   `https://wa.me/${form.dataset.whatsappNumber}?text=${encodeURIComponent(message)}`;
 const emailUrl = (form, subject, message) =>
