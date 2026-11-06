@@ -356,3 +356,38 @@
 .about-teaser__button{min-height:44px;padding:10px 17px;box-shadow:0 4px 14px rgba(17,61,55,.05)}
 .about-teaser__button svg{flex:none}
 @media(max-width:690px){.about-teaser.section-pad{grid-template-columns:1fr;gap:12px;padding-top:30px;padding-bottom:32px}.about-teaser h2{font-size:clamp(1.65rem,7vw,2.1rem)}.about-teaser__details p{margin-bottom:15px}}
+
+/* Keep both halves of the hero inside the same centered content width. */
+@media(min-width:1141px){
+  .hero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,3vw,56px);min-height:0;padding:110px max(5vw,calc((100vw - 1540px)/2)) 48px}
+  .hero-copy{min-width:0;padding:16px 0 22px}
+  .hero-visual{min-width:0;max-width:760px;justify-self:end}
+}
+@media(min-width:901px) and (max-width:1140px){
+  .hero{padding-top:96px}
+  .hero-visual{width:min(82vw,820px);max-width:calc(100% - 12vw);margin:0 auto 24px}
+}
+@media(max-width:900px){
+  .hero-visual{width:calc(100% - 12vw);margin-inline:6vw;border-radius:22px}
+  .hero-visual figcaption{padding:10px 14px}
+}
+@media(min-width:691px){
+  .home-main>.section-pad{padding-top:58px;padding-bottom:58px}
+  .home-main>.video-section.section-pad{padding-top:0}
+  .home-main>.about-teaser.section-pad{padding-top:40px;padding-bottom:40px}
+}
+
+/* Keep the footer readable and compact on both narrow and very wide screens. */
+.footer{padding-top:34px;padding-bottom:18px}
+.footer-main,.footer-legal{max-width:1360px;margin-inline:auto}
+.footer-main{grid-template-columns:minmax(0,1.2fr) minmax(150px,.7fr) minmax(190px,.75fr);gap:clamp(24px,4vw,64px);padding-bottom:21px}
+.footer h2{margin:3px 0 11px}
+.footer-brand{margin-bottom:7px}
+.footer-legal{gap:10px 20px;padding-top:13px}
+@media(max-width:690px){
+  .footer{padding:29px 6vw calc(18px + env(safe-area-inset-bottom))}
+  .footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;padding-bottom:18px}
+  .footer-main>.footer-intro:first-child{grid-column:1/-1}
+  .footer h2{margin:2px 0 9px}
+  .footer-legal{gap:9px;padding-top:12px}
+}
