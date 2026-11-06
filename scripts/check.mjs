@@ -47,6 +47,8 @@ for (const legalPath of legalPages) {
 if (PREVIEW_MODE && sitemap.includes('<loc>')) throw new Error('Preview sitemap must not advertise noindex pages');
 if (!PREVIEW_MODE && [...sitemap.matchAll(/<loc>/g)].length !== pages.length - legalPages.length) throw new Error('Release sitemap must list all indexable pages');
 const home = await readFile('dist/index.html', 'utf8');
+if (!home.includes('class="about-teaser section-pad"') || !home.includes('href="/despre-noi/">Mai multe despre noi')) throw new Error('Home must link its about introduction to the dedicated page');
+if (home.indexOf('class="about-teaser section-pad"') > home.indexOf('class="social-section section-pad"')) throw new Error('About introduction must precede social channels');
 if (!/<source type="image\/webp" srcset="\/assets\/hero-480\.webp\?v=[a-f0-9]{12} 480w, \/assets\/hero-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/hero-800\.webp\?v=[a-f0-9]{12} 800w, \/assets\/hero-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/hero-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/hero\.webp\?v=[a-f0-9]{12} 1752w" sizes="\(min-width: 1440px\) 760px, \(min-width: 1141px\) 44vw, 100vw"/.test(home)) throw new Error('Hero must offer progressive sizes of the complete original photo');
 if (!/<img src="\/assets\/hero\.webp\?v=[a-f0-9]{12}" width="1752" height="897"/.test(home)) throw new Error('Hero must retain the uncropped landscape source');
 if (home.includes('/assets/hero-portrait')) throw new Error('Oversized portrait hero should not be shipped');

@@ -348,3 +348,11 @@
   .hero-visual figcaption small{margin-left:auto}
 }
 @media(min-width:901px) and (max-width:1140px){.hero-visual{width:calc(100% - 48px);max-width:900px;margin:0 auto 30px;border-radius:24px}}
+
+/* A short introduction before the social channels, without another tall card. */
+.about-teaser.section-pad{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:center;gap:clamp(24px,5vw,76px);padding-top:40px;padding-bottom:40px;border-top:1px solid #e5e6df;background:#fffdf9}
+.about-teaser h2{max-width:590px;margin:0;font-size:clamp(1.65rem,2.5vw,2.55rem);line-height:1.17}
+.about-teaser__details p{max-width:620px;margin:0 0 16px;font-size:.91rem;line-height:1.6}
+.about-teaser__button{min-height:44px;padding:10px 17px;box-shadow:0 4px 14px rgba(17,61,55,.05)}
+.about-teaser__button svg{flex:none}
+@media(max-width:690px){.about-teaser.section-pad{grid-template-columns:1fr;gap:12px;padding-top:30px;padding-bottom:32px}.about-teaser h2{font-size:clamp(1.65rem,7vw,2.1rem)}.about-teaser__details p{margin-bottom:15px}}
