@@ -88,6 +88,10 @@ if (PREVIEW_MODE && !headers.includes('X-Robots-Tag: noindex, nofollow')) throw 
 if (!PREVIEW_MODE && headers.includes('X-Robots-Tag: noindex')) throw new Error('Release headers must not block indexing globally');
 const llms = await readFile('dist/llms.txt', 'utf8');
 if (!llms.startsWith('# Benvora Grup') || !llms.includes(`](${SITE_URL}/masaj-la-birou/)`) || !llms.includes(`](${SITE_URL}/programari/)`) || !llms.includes(`](${SITE_URL}/contact/)`)) throw new Error('llms.txt needs an H1 and real page links');
+const aiCatalog = JSON.parse(await readFile('dist/ai-catalog.json', 'utf8'));
+const wellKnownCatalog = JSON.parse(await readFile('dist/.well-known/ai-catalog.json', 'utf8'));
+const ardManifest = JSON.parse(await readFile('dist/.well-known/ard.json', 'utf8'));
+if (aiCatalog.specVersion !== '1.0' || aiCatalog.host?.displayName !== 'Benvora Grup' || !Array.isArray(aiCatalog.entries) || aiCatalog.entries.length || JSON.stringify(aiCatalog) !== JSON.stringify(wellKnownCatalog) || !Array.isArray(ardManifest.entries) || ardManifest.entries.length) throw new Error('AI discovery manifests must be valid and must not advertise unavailable resources');
 const notFound = await readFile('dist/404.html', 'utf8');
 if (!notFound.includes('name="robots" content="noindex,follow"') || !notFound.includes('href="/contact/"')) throw new Error('Custom 404 must be useful and noindex');
 if (notFound.includes('rel="canonical"')) throw new Error('Custom 404 must not claim a canonical URL');
