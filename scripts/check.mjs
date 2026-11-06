@@ -1,5 +1,7 @@
 import { readFile, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+const SITE_URL = process.env.BENVORA_SITE_URL ?? 'https://benvora-grup.avyron.eu';
+const PREVIEW_MODE = (process.env.BENVORA_RELEASE_MODE ?? 'preview') === 'preview';
 const legalPages = ['/confidentialitate/', '/cookie-uri/', '/termeni-si-conditii/'];
 const pages = ['/', '/masaj-la-birou/', '/pentru-companii/', '/despre-noi/', '/contact/', ...legalPages];
 for (const path of pages) {
@@ -7,7 +9,7 @@ for (const path of pages) {
   for (const item of ['<html lang="ro">', '<main id="main"', '<h1 ', 'rel="canonical"', 'name="description"', 'application/ld+json']) {
     if (!html.includes(item)) throw new Error(`${path}: missing ${item}`);
   }
-  if (!html.includes(`rel="canonical" href="https://benvora-grup.avyron.eu${path}"`)) throw new Error(`${path}: incorrect canonical`);
+  if (!html.includes(`rel="canonical" href="${SITE_URL}${path}"`)) throw new Error(`${path}: incorrect canonical`);
   if ([...html.matchAll(/<h1\b/g)].length !== 1) throw new Error(`${path}: expected exactly one h1`);
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
   if (new Set(ids).size !== ids.length) throw new Error(`${path}: duplicate HTML id`);
@@ -27,7 +29,8 @@ for (const path of pages) {
   const jsonLd = html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1];
   if (!jsonLd) throw new Error(`${path}: missing JSON-LD contents`);
   JSON.parse(jsonLd);
-  if (!html.includes('name="robots" content="noindex,nofollow"')) throw new Error(`${path}: public preview must be noindex`);
+  if (PREVIEW_MODE && !html.includes('name="robots" content="noindex,nofollow"')) throw new Error(`${path}: public preview must be noindex`);
+  if (!PREVIEW_MODE && !legalPages.includes(path) && html.includes('name="robots" content="noindex')) throw new Error(`${path}: indexable page still has noindex`);
   if (html.includes('brand-intro') || html.includes('intro.js') || html.includes('intro-active')) throw new Error(`${path}: blocking intro must be removed`);
   if (!html.includes('Conectează-te / Înregistrează-te') || !html.includes('id="site-toast"')) throw new Error(`${path}: missing account announcement`);
   if (!html.includes('id="menu-toggle"') || !html.includes('role="dialog" aria-modal="true" aria-label="Meniu de navigare"')) throw new Error(`${path}: missing accessible overlay menu`);
@@ -41,6 +44,8 @@ const sitemap = await readFile('dist/sitemap.xml', 'utf8');
 for (const legalPath of legalPages) {
   if (sitemap.includes(legalPath)) throw new Error(`${legalPath}: legal draft appears in sitemap`);
 }
+if (PREVIEW_MODE && sitemap.includes('<loc>')) throw new Error('Preview sitemap must not advertise noindex pages');
+if (!PREVIEW_MODE && [...sitemap.matchAll(/<loc>/g)].length !== pages.length - legalPages.length) throw new Error('Release sitemap must list all indexable pages');
 const home = await readFile('dist/index.html', 'utf8');
 if (!/<source type="image\/webp" srcset="\/assets\/hero-480\.webp\?v=[a-f0-9]{12} 480w, \/assets\/hero-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/hero-800\.webp\?v=[a-f0-9]{12} 800w, \/assets\/hero-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/hero-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/hero\.webp\?v=[a-f0-9]{12} 1752w" sizes="\(min-width: 1440px\) 760px, \(min-width: 1141px\) 44vw, 100vw"/.test(home)) throw new Error('Hero must offer progressive sizes of the complete original photo');
 if (!/<img src="\/assets\/hero\.webp\?v=[a-f0-9]{12}" width="1752" height="897"/.test(home)) throw new Error('Hero must retain the uncropped landscape source');
@@ -59,9 +64,17 @@ if ([...contact.matchAll(/<!--email_off--><strong>[^<]+@masajlabirou\.ro<\/stron
 const privacy = await readFile('dist/confidentialitate/index.html', 'utf8');
 if (!privacy.includes('Formularul de ofertă pregătește mesajul în browser')) throw new Error('Privacy page must describe the local form');
 const robots = await readFile('dist/robots.txt', 'utf8');
-if (!robots.includes('Disallow: /')) throw new Error('Public preview must disallow crawling');
+if (!robots.includes('User-agent: *\nAllow: /')) throw new Error('Crawlers must be able to see noindex directives and the final sitemap');
+if (PREVIEW_MODE && robots.includes('Sitemap:')) throw new Error('Preview robots must not advertise an empty sitemap');
+if (!PREVIEW_MODE && !robots.includes(`Sitemap: ${SITE_URL}/sitemap.xml`)) throw new Error('Release robots must advertise the canonical sitemap');
 const headers = await readFile('dist/_headers', 'utf8');
-if (!headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Public preview needs noindex response header');
+if (PREVIEW_MODE && !headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Public preview needs noindex response header');
+if (!PREVIEW_MODE && headers.includes('X-Robots-Tag: noindex')) throw new Error('Release headers must not block indexing globally');
+const llms = await readFile('dist/llms.txt', 'utf8');
+if (!llms.startsWith('# Benvora Grup') || !llms.includes(`](${SITE_URL}/masaj-la-birou/)`) || !llms.includes(`](${SITE_URL}/contact/)`)) throw new Error('llms.txt needs an H1 and real page links');
+const notFound = await readFile('dist/404.html', 'utf8');
+if (!notFound.includes('name="robots" content="noindex,follow"') || !notFound.includes('href="/contact/"')) throw new Error('Custom 404 must be useful and noindex');
+if (notFound.includes('rel="canonical"')) throw new Error('Custom 404 must not claim a canonical URL');
 try { await stat('dist/assets/intro.js'); throw new Error('Unused intro script is still shipped'); } catch (error) {
   if (error.code !== 'ENOENT') throw error;
 }
