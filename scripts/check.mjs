@@ -40,15 +40,20 @@ for (const legalPath of legalPages) {
   if (sitemap.includes(legalPath)) throw new Error(`${legalPath}: legal draft appears in sitemap`);
 }
 const home = await readFile('dist/index.html', 'utf8');
-if (!/<source media="\(max-width: 1140px\)" srcset="\/assets\/hero\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Narrow-view hero must use the complete original photo');
+if (!/<source media="\(max-width: 1140px\)" type="image\/webp" srcset="\/assets\/hero-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/hero-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/hero\.webp\?v=[a-f0-9]{12} 1752w"/.test(home)) throw new Error('Narrow-view hero must offer both sizes of the complete original photo');
+if (!/<source media="\(min-width: 1141px\)" type="image\/webp" srcset="\/assets\/hero-portrait\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Desktop hero needs the efficient portrait image');
 if (!/<img src="\/assets\/hero-portrait\.jpg\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Desktop hero must use the portrait adaptation');
-if (!/<img src="\/assets\/service\.webp\?v=[a-f0-9]{12}"/.test(home)) throw new Error('Service image should be a complete image, not a cropped background');
+if (!/<img src="\/assets\/service-960\.webp\?v=[a-f0-9]{12}" srcset="\/assets\/service-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/service-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/service\.webp\?v=[a-f0-9]{12} 1752w"/.test(home)) throw new Error('Service image should be responsive and uncropped');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
 for (const name of ['TikTok', 'Instagram', 'Facebook']) {
   if (!home.includes(`Profilul Benvora Grup pe ${name} este în pregătire.`) && !home.includes(`aria-label="Benvora Grup pe ${name}"`)) throw new Error(`${name}: missing social channel`);
 }
 const service = await readFile('dist/masaj-la-birou/index.html', 'utf8');
 if (!service.includes('class="faq-list"')) throw new Error('Service page is missing practical questions');
+const contact = await readFile('dist/contact/index.html', 'utf8');
+if (!contact.includes('id="contact-form"') || !contact.includes('Continuă pe WhatsApp')) throw new Error('Contact page needs the guided WhatsApp request');
+const privacy = await readFile('dist/confidentialitate/index.html', 'utf8');
+if (!privacy.includes('Formularul de ofertă pregătește mesajul în browser')) throw new Error('Privacy page must describe the local form');
 const robots = await readFile('dist/robots.txt', 'utf8');
 if (!robots.includes('Disallow: /')) throw new Error('Public preview must disallow crawling');
 const headers = await readFile('dist/_headers', 'utf8');
@@ -56,8 +61,9 @@ if (!headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Publi
 try { await stat('dist/assets/intro.js'); throw new Error('Unused intro script is still shipped'); } catch (error) {
   if (error.code !== 'ENOENT') throw error;
 }
-for (const asset of ['hero.webp', 'hero-portrait.jpg', 'service.webp']) {
+for (const asset of ['hero.webp', 'hero-960.webp', 'hero-1280.webp', 'hero-portrait.jpg', 'hero-portrait.webp', 'service.webp', 'service-960.webp', 'service-1280.webp', 'brand-mark-192.webp', 'brand-mark-384.webp']) {
   const size = (await stat(`dist/assets/${asset}`)).size;
-  if (size > (asset === 'hero-portrait.jpg' ? 650_000 : 350_000)) throw new Error(`${asset} too large: ${size}`);
+  const limit = asset === 'hero-portrait.jpg' ? 650_000 : (/-(960|1280)\.webp$/.test(asset)) ? 100_000 : asset.startsWith('brand-mark-') ? 50_000 : 350_000;
+  if (size > limit) throw new Error(`${asset} too large: ${size}`);
   console.log(`OK ${asset} ${size} bytes`);
 }
