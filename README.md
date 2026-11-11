@@ -28,6 +28,8 @@ Site de prezentare static, în limba română, pentru servicii de masaj la sediu
 
 URL inițial: `https://benvora-grup.avyron.eu/`. Clienta deține deja `masajlabirou.ro`; conectarea lui și a rutării e-mailurilor va avea loc ulterior. `BENVORA_SITE_URL` poate fi setat la `https://masajlabirou.ro` pentru a actualiza împreună canonicalurile, sitemap-ul, datele structurate și `llms.txt`. Două copii identice accesibile pe ambele domenii nu pot fi garantate ca două rezultate indexate: alegeți unul canonic și redirecționați celălalt la migrare.
 
+Zona Cloudflare pentru domeniul final și înregistrările de site/`www` sunt pregătite, dar DNS-ul autoritativ rămâne în AWS până la schimbarea nameserverelor din contul Hostico al clientei. Starea exactă, valorile DNS și ordinea activării sunt în [planul domeniului final](docs/domeniu-final.md).
+
 ## Pregătirea indexării finale
 
 1. Înlocuiți textele juridice provizorii din `scripts/build.mjs` cu variantele aprobate de clientă; confirmați identitatea operatorului, datele de contact pentru confidențialitate și fluxurile reale de date.
