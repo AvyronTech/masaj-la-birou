@@ -1,0 +1,12 @@
+{
+  "name": "benvora-grup-www-redirect",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-11",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "www.benvora-grup.avyron.eu",
+      "custom_domain": true
+    }
+  ]
+}
