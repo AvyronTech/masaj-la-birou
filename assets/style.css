@@ -439,3 +439,25 @@
 .request-main .page-hero .lead{max-width:850px;font-size:1.05rem;line-height:1.6}
 .request-main>.section-pad{padding-top:54px;padding-bottom:58px}
 @media(max-width:690px){.request-main .page-hero{padding-top:108px;padding-bottom:33px}.request-main .page-hero h1{font-size:clamp(2.15rem,8.8vw,3.2rem)}.request-main>.section-pad{padding-top:37px;padding-bottom:43px}}
+
+/* No consent-only storage or optional trackers are enabled in this release. */
+.privacy-banner{position:fixed;z-index:95;left:clamp(12px,2.5vw,32px);bottom:clamp(12px,2.5vw,28px);width:min(610px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:20px 22px 16px;border:1px solid #bed0c2;border-radius:21px;background:linear-gradient(135deg,#fffefa 0%,#f2f6f0 100%);color:#183b39;box-shadow:0 16px 48px rgba(11,41,42,.18)}
+.privacy-banner[hidden]{display:none}
+.privacy-banner__header{display:flex;gap:13px;align-items:center}
+.privacy-banner__mark{display:grid;place-items:center;flex:none;width:42px;height:42px;border:1px solid #4d7b68;border-radius:13px;background:linear-gradient(145deg,#123b39,#32685c);color:#efd2a8;font:italic 1.55rem Georgia,serif}
+.privacy-banner__eyebrow{margin:0 0 3px;color:#6f593d;font-size:.6rem;font-weight:800;letter-spacing:.15em;line-height:1.3}
+.privacy-banner h2{margin:0;font-size:clamp(1.2rem,2vw,1.47rem);line-height:1.18}
+.privacy-banner__summary{margin:12px 0 0;color:#35524d;font-size:.83rem;line-height:1.53}
+.privacy-banner__details{margin-top:10px;border-top:1px solid #d7e1d8}
+.privacy-banner__details summary{display:table;padding:10px 2px 3px;color:#245950;font-size:.76rem;font-weight:750;cursor:pointer}
+.privacy-banner__details p{margin:5px 0 8px;color:#3c5a53;font-size:.76rem;line-height:1.5}
+.privacy-banner__footer{position:sticky;bottom:-16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px -22px -16px;padding:11px 22px 15px;border-top:1px solid #d7e1d8;background:#f9faf6}
+.privacy-banner__links{display:flex;flex-wrap:wrap;gap:8px 15px}
+.privacy-banner__links a{color:#245950;font-size:.73rem;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.privacy-banner__footer button{min-height:44px;flex:none;padding:9px 20px;border:0;border-radius:99px;background:#143a3a;color:#fff;font-size:.79rem;font-weight:750;cursor:pointer}
+.privacy-banner__footer button:hover{background:#286058}
+.footer-privacy-button{padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+.footer-privacy-button:hover{text-decoration:underline;text-underline-offset:4px}
+.about-teaser{scroll-margin-top:100px}
+.about-teaser__details p+p{margin-top:10px}
+@media(max-width:690px){.privacy-banner{left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));width:auto;max-height:min(58dvh,430px);padding:15px 15px 12px;border-radius:17px}.privacy-banner__header{gap:10px}.privacy-banner__mark{width:35px;height:35px;font-size:1.3rem}.privacy-banner__eyebrow{font-size:.51rem}.privacy-banner h2{font-size:1.2rem}.privacy-banner__summary{font-size:.76rem;line-height:1.45}.privacy-banner__details summary{font-size:.74rem}.privacy-banner__footer{bottom:-12px;gap:8px;margin:10px -15px -12px;padding:9px 15px 12px}.privacy-banner__links{gap:5px 10px}.privacy-banner__links a{font-size:.68rem}.privacy-banner__footer button{padding:8px 13px}.footer-privacy-button{min-height:44px}}
