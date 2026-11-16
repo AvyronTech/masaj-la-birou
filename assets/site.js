@@ -120,7 +120,21 @@ document.querySelectorAll('[data-coming-soon]').forEach(button => {
 const massageCarousel = document.querySelector('[data-carousel]');
 if (massageCarousel) {
   const carouselCards = [...massageCarousel.querySelectorAll('.massage-card')];
+  const carouselPrevious = document.querySelector('[data-carousel-prev]');
+  const carouselNext = document.querySelector('[data-carousel-next]');
+  const carouselControls = carouselPrevious?.closest('.carousel-controls');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let carouselFrame = 0;
+  const updateCarouselControls = () => {
+    carouselFrame = 0;
+    const hasOverflow = massageCarousel.scrollWidth > massageCarousel.clientWidth + 2;
+    if (carouselControls) carouselControls.hidden = !hasOverflow;
+    if (carouselPrevious) carouselPrevious.disabled = !hasOverflow || massageCarousel.scrollLeft <= 2;
+    if (carouselNext) carouselNext.disabled = !hasOverflow || massageCarousel.scrollLeft + massageCarousel.clientWidth >= massageCarousel.scrollWidth - 2;
+  };
+  const scheduleCarouselUpdate = () => {
+    if (!carouselFrame) carouselFrame = requestAnimationFrame(updateCarouselControls);
+  };
   const moveCarousel = direction => {
     const firstCard = carouselCards[0];
     if (!firstCard) return;
@@ -131,11 +145,15 @@ if (massageCarousel) {
       behavior: reducedMotion.matches ? 'auto' : 'smooth',
     });
   };
-  document.querySelector('[data-carousel-prev]')?.addEventListener('click', () => moveCarousel(-1));
-  document.querySelector('[data-carousel-next]')?.addEventListener('click', () => moveCarousel(1));
+  carouselPrevious?.addEventListener('click', () => moveCarousel(-1));
+  carouselNext?.addEventListener('click', () => moveCarousel(1));
+  massageCarousel.addEventListener('scroll', scheduleCarouselUpdate, { passive: true });
   massageCarousel.addEventListener('keydown', event => {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     event.preventDefault();
     moveCarousel(event.key === 'ArrowRight' ? 1 : -1);
   });
+  if ('ResizeObserver' in window) new ResizeObserver(scheduleCarouselUpdate).observe(massageCarousel);
+  else window.addEventListener('resize', scheduleCarouselUpdate, { passive: true });
+  scheduleCarouselUpdate();
 }

@@ -123,7 +123,7 @@
 .social-section{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:clamp(24px,5vw,70px);background:linear-gradient(125deg,#e5ece5,#f2f0e9);border-top:1px solid #dce4dc}
 .social-section h2{max-width:580px;margin-bottom:16px}
 .social-section p:not(.eyebrow){max-width:540px;margin-bottom:0}
-.social-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.social-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .social-button{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:11px;min-height:128px;padding:17px;border:1px solid #d1ddd2;border-radius:19px;background:rgba(255,255,255,.78);color:#163d39;font:700 .91rem Inter,Arial,sans-serif;text-align:left;cursor:pointer;box-shadow:0 9px 26px rgba(21,67,54,.06);transition:transform .2s,box-shadow .2s,border-color .2s}
 .social-button:hover{transform:translateY(-4px);border-color:#91ad9d;box-shadow:0 14px 32px rgba(21,67,54,.11)}
 .social-button__symbol{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:11px;background:#1f534d;color:#fff}
@@ -206,12 +206,12 @@
 }
 @media(max-width:690px){.hero-visual{border-radius:0 0 0 34px}.hero-visual figcaption small{margin-left:0}}
 
-/* The three social networks remain three square tiles at every size. */
+/* Social profiles stay as compact square tiles at every size. */
 .social-button{aspect-ratio:1;min-height:0;align-items:center;justify-content:center;text-align:center;gap:9px}
 .social-button__symbol{width:42px;height:42px}
 .social-button small{justify-content:center}
 @media(max-width:690px){
-  .social-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-width:none}
+  .social-actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:none}
   .social-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;aspect-ratio:1;min-height:0;padding:8px 4px;border-radius:16px;font-size:clamp(.76rem,3.5vw,.91rem)}
   .social-button__symbol{width:clamp(34px,9vw,42px);height:clamp(34px,9vw,42px)}
   .social-button__symbol svg{width:20px;height:20px}
@@ -499,9 +499,12 @@
 .carousel-hint{margin:8px 0 0;color:#587069;font-size:.76rem}
 .review-preview{display:grid;grid-template-columns:minmax(0,.78fr) minmax(420px,1.22fr);gap:clamp(32px,7vw,100px);align-items:center}.review-preview__copy h2{max-width:570px}.review-preview__copy p:not(.eyebrow){max-width:540px}
 .review-dashboard{overflow:hidden;border:1px solid #c7dcd8;border-radius:25px;background:linear-gradient(145deg,#fff,#edf6f5);box-shadow:0 18px 50px rgba(18,65,61,.11)}.review-dashboard__top{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 22px;background:#123d3a;color:#fff}.review-dashboard__top span{font:400 1.15rem Georgia,serif}.review-dashboard__top strong{color:#b9d9d2;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase}.review-dashboard ol{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0;padding:18px 18px 12px;list-style:none}.review-dashboard li{display:flex;gap:10px;padding:12px;border-right:1px solid #d9e7e3}.review-dashboard li:last-child{border:0}.review-dashboard li>span{display:grid;place-items:center;flex:none;width:27px;height:27px;border-radius:50%;background:#d7ece8;color:#184c46;font-size:.68rem;font-weight:800}.review-dashboard li strong,.review-dashboard li small{display:block}.review-dashboard li strong{font-size:.73rem}.review-dashboard li small{margin-top:4px;color:#617770;font-size:.64rem;line-height:1.35}.review-placeholder{margin:0 18px 18px;padding:20px;border:1px dashed #a8c7c0;border-radius:17px;background:rgba(255,255,255,.68)}.review-placeholder>span{display:block;color:#b48a5d;font:italic 2rem Georgia,serif;line-height:.7}.review-placeholder p{margin:8px 0 5px;color:#244d48;font:400 1.1rem Georgia,serif}.review-placeholder small{color:#647971;font-size:.67rem}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;border:0!important}
 .footer-email{display:block;margin-top:18px;color:#d8e6df;font-size:.8rem;overflow-wrap:anywhere}.footer-email small{display:block;margin-bottom:4px;color:#8eaaa0;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase}
 .contact-card-static{cursor:default}.contact-card-static strong{overflow-wrap:anywhere}
 .social-actions{grid-template-columns:repeat(4,minmax(0,1fr))}.social-button--linkedin{border-color:#9bbedd;background:linear-gradient(145deg,#e8f4ff,#bad8ef);color:#123e68}.social-button--linkedin .social-button__symbol{background:#0a66c2;color:#fff}.social-button--linkedin small{color:#285a84}.social-button--linkedin:hover{border-color:#4b92d1}
+.carousel-controls[hidden]{display:none}.carousel-controls button:disabled{opacity:.38;cursor:not-allowed;transform:none}.carousel-controls button:disabled:hover{background:#fff;transform:none}
+.footer-main nav a,.footer-contact>a{display:flex;align-items:center;min-height:32px}.footer-legal nav a,.footer-legal nav button{display:inline-flex;align-items:center;min-height:32px}
 
 @media(max-width:1050px){.massage-carousel{grid-auto-columns:minmax(300px,calc((100% - 16px)/2))}.review-preview{grid-template-columns:1fr}.social-actions{max-width:none}}
 @media(max-width:690px){
@@ -512,4 +515,5 @@
   .social-actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.social-button{font-size:clamp(.62rem,2.9vw,.82rem);border-radius:14px}.social-button__symbol{width:clamp(31px,8vw,38px);height:clamp(31px,8vw,38px)}
 }
 @media(max-width:390px){.social-actions{gap:5px}.social-button{padding:6px 2px;font-size:.6rem}.social-button__symbol{width:30px;height:30px}.social-button__symbol svg{width:17px;height:17px}.review-placeholder{padding:17px}}
+@media(max-width:690px){.footer-main nav a,.footer-contact>a,.footer-legal nav a,.footer-legal nav button{min-height:44px}}
 @media(prefers-reduced-motion:reduce){.carousel-controls button{transition:none}.massage-carousel{scroll-behavior:auto}}

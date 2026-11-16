@@ -81,6 +81,7 @@ if (bookingForm) {
       button.textContent = String(number);
       button.setAttribute('aria-label', longDate.format(date));
       button.setAttribute('aria-pressed', String(key === selectedDate));
+      button.tabIndex = -1;
       button.disabled = date < today;
       if (key === dateKey(today)) button.classList.add('is-today');
       if (key === selectedDate) button.classList.add('is-selected');

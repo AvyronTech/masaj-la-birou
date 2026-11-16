@@ -29,7 +29,7 @@ const CLIENT = Object.freeze({
   city: 'București',
   phoneDisplay: '0767 834 296',
   phone: '+40767834296',
-  contactEmail: '<span class="email-address" aria-label="contact la masajlabirou punct ro"><span aria-hidden="true">contact</span><span aria-hidden="true">@</span><span aria-hidden="true">masajlabirou.ro</span></span>',
+  contactEmail: '<span class="email-address"><span class="visually-hidden">contact la masajlabirou punct ro</span><span aria-hidden="true">contact</span><span aria-hidden="true">@</span><span aria-hidden="true">masajlabirou.ro</span></span>',
   // Activate a profile only after the client confirms its exact public URL.
   socialProfiles: { TikTok: '', Instagram: '', Facebook: '', LinkedIn: '' },
 });
