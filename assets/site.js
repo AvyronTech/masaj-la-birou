@@ -116,3 +116,26 @@ document.querySelectorAll('[data-coming-soon]').forEach(button => {
     }
   });
 });
+
+const massageCarousel = document.querySelector('[data-carousel]');
+if (massageCarousel) {
+  const carouselCards = [...massageCarousel.querySelectorAll('.massage-card')];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const moveCarousel = direction => {
+    const firstCard = carouselCards[0];
+    if (!firstCard) return;
+    const styles = getComputedStyle(massageCarousel);
+    const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
+    massageCarousel.scrollBy({
+      left: direction * (firstCard.getBoundingClientRect().width + gap),
+      behavior: reducedMotion.matches ? 'auto' : 'smooth',
+    });
+  };
+  document.querySelector('[data-carousel-prev]')?.addEventListener('click', () => moveCarousel(-1));
+  document.querySelector('[data-carousel-next]')?.addEventListener('click', () => moveCarousel(1));
+  massageCarousel.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    moveCarousel(event.key === 'ArrowRight' ? 1 : -1);
+  });
+}

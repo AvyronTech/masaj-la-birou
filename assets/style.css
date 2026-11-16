@@ -467,3 +467,49 @@
 .topbar.is-compact{top:16px;min-height:66px;padding:10px 15px 10px 24px}
 @media(max-width:900px){.topbar.is-compact{top:12px;min-height:60px;padding:10px 13px}}
 @media(max-width:360px){.topbar.is-compact{min-height:58px;padding:8px 10px}}
+
+/* Light-blue liquid-glass navigation, rendered with paint-only layers for stable scrolling. */
+.topbar,.topbar.is-compact{
+  border-color:rgba(255,255,255,.84);
+  background:
+    radial-gradient(circle at 12% 0,rgba(255,255,255,.9),transparent 39%),
+    linear-gradient(135deg,rgba(221,244,252,.97),rgba(196,229,243,.95));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),inset 0 -1px 0 rgba(85,151,177,.13),0 13px 34px rgba(31,81,101,.13);
+}
+.topbar::before{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;background:linear-gradient(110deg,rgba(255,255,255,.38),transparent 34%,rgba(112,190,222,.12) 72%,rgba(255,255,255,.25));opacity:.9}
+.topbar>*{position:relative;z-index:1}
+.topbar.is-compact{background:radial-gradient(circle at 18% 0,rgba(255,255,255,.82),transparent 38%),linear-gradient(135deg,rgba(210,239,250,.98),rgba(184,220,237,.97))}
+
+/* Team-benefit teaser and detail page. */
+.team-benefit-teaser{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:28px;background:linear-gradient(130deg,#edf7f8,#f7f3eb);border-top:1px solid #d5e6e6;border-bottom:1px solid #d5e6e6}
+.team-benefit-teaser h2{max-width:720px;margin-bottom:12px}.team-benefit-teaser p:not(.eyebrow){max-width:710px;margin:0}.team-benefit-teaser .button{white-space:nowrap}
+.massage-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.72fr);gap:clamp(28px,6vw,90px);align-items:end}.massage-intro h2{max-width:740px}.massage-intro>p{margin:0;max-width:600px}
+.massage-carousel-section{overflow:hidden;background:#eef4ef}
+.carousel-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:30px}.carousel-heading h2{margin-bottom:0}
+.carousel-controls{display:flex;gap:9px}.carousel-controls button{display:grid;place-items:center;width:48px;height:48px;border:1px solid #a8c2ba;border-radius:50%;background:#fff;color:#174640;cursor:pointer;transition:transform .18s ease,background .18s ease}.carousel-controls button:first-child svg{transform:rotate(180deg)}.carousel-controls button:hover{transform:translateY(-2px);background:#dceef0}.carousel-controls svg{width:20px;height:20px}
+.massage-carousel{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(310px,calc((100% - 32px)/3));gap:16px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#759b90 transparent;padding:2px 2px 15px}
+.massage-card{position:relative;overflow:hidden;scroll-snap-align:start;border:1px solid #ceded8;border-radius:25px;background:#fff;box-shadow:0 15px 38px rgba(17,66,59,.08)}
+.massage-card__index{position:absolute;z-index:2;top:17px;left:17px;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:rgba(13,54,51,.9);color:#fff;font-size:.7rem;font-weight:800}
+.massage-card__visual{position:relative;display:flex;align-items:end;min-height:190px;padding:20px;background-color:#cfe2dc;background-image:radial-gradient(circle at 24% 20%,rgba(255,255,255,.75),transparent 28%),linear-gradient(145deg,#b8dad6,#dfe9db 56%,#b5cfcb)}
+.massage-card__visual--relax{background-image:radial-gradient(circle at 74% 20%,rgba(255,255,255,.7),transparent 28%),linear-gradient(145deg,#e4d7c9,#c8ddd5 56%,#a9c9c3)}
+.massage-card__visual--focus{background-image:radial-gradient(circle at 22% 18%,rgba(255,255,255,.7),transparent 25%),linear-gradient(145deg,#bed9e0,#dbe8df 55%,#d8c8b4)}
+.massage-card__visual::after{content:"";position:absolute;right:14%;bottom:0;width:34%;height:75%;border-radius:60px 60px 12px 12px;background:linear-gradient(155deg,rgba(25,82,75,.88),rgba(11,53,52,.96));box-shadow:-34px 28px 0 -16px rgba(177,140,98,.75);transform:skew(-4deg)}
+.massage-card__visual span{position:relative;z-index:2;margin-left:auto;padding:7px 11px;border:1px solid rgba(255,255,255,.65);border-radius:99px;background:rgba(255,255,255,.82);color:#254f49;font-size:.68rem;font-weight:800}
+.massage-card__content{padding:25px}.massage-card__content h3{margin:3px 0 10px;font:400 clamp(1.45rem,2.2vw,1.9rem) Georgia,serif}.massage-card__content>p:not(.eyebrow){min-height:68px;margin-bottom:17px}.massage-card__content ul{margin:0;padding:0;list-style:none}.massage-card__content li{padding:9px 0;border-top:1px solid #e1eae5;color:#49645c;font-size:.8rem}.massage-card__content li::before{content:"✓";margin-right:8px;color:#8d6a42;font-weight:800}
+.carousel-hint{margin:8px 0 0;color:#587069;font-size:.76rem}
+.review-preview{display:grid;grid-template-columns:minmax(0,.78fr) minmax(420px,1.22fr);gap:clamp(32px,7vw,100px);align-items:center}.review-preview__copy h2{max-width:570px}.review-preview__copy p:not(.eyebrow){max-width:540px}
+.review-dashboard{overflow:hidden;border:1px solid #c7dcd8;border-radius:25px;background:linear-gradient(145deg,#fff,#edf6f5);box-shadow:0 18px 50px rgba(18,65,61,.11)}.review-dashboard__top{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 22px;background:#123d3a;color:#fff}.review-dashboard__top span{font:400 1.15rem Georgia,serif}.review-dashboard__top strong{color:#b9d9d2;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase}.review-dashboard ol{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0;padding:18px 18px 12px;list-style:none}.review-dashboard li{display:flex;gap:10px;padding:12px;border-right:1px solid #d9e7e3}.review-dashboard li:last-child{border:0}.review-dashboard li>span{display:grid;place-items:center;flex:none;width:27px;height:27px;border-radius:50%;background:#d7ece8;color:#184c46;font-size:.68rem;font-weight:800}.review-dashboard li strong,.review-dashboard li small{display:block}.review-dashboard li strong{font-size:.73rem}.review-dashboard li small{margin-top:4px;color:#617770;font-size:.64rem;line-height:1.35}.review-placeholder{margin:0 18px 18px;padding:20px;border:1px dashed #a8c7c0;border-radius:17px;background:rgba(255,255,255,.68)}.review-placeholder>span{display:block;color:#b48a5d;font:italic 2rem Georgia,serif;line-height:.7}.review-placeholder p{margin:8px 0 5px;color:#244d48;font:400 1.1rem Georgia,serif}.review-placeholder small{color:#647971;font-size:.67rem}
+.footer-email{display:block;margin-top:18px;color:#d8e6df;font-size:.8rem;overflow-wrap:anywhere}.footer-email small{display:block;margin-bottom:4px;color:#8eaaa0;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase}
+.contact-card-static{cursor:default}.contact-card-static strong{overflow-wrap:anywhere}
+.social-actions{grid-template-columns:repeat(4,minmax(0,1fr))}.social-button--linkedin{border-color:#9bbedd;background:linear-gradient(145deg,#e8f4ff,#bad8ef);color:#123e68}.social-button--linkedin .social-button__symbol{background:#0a66c2;color:#fff}.social-button--linkedin small{color:#285a84}.social-button--linkedin:hover{border-color:#4b92d1}
+
+@media(max-width:1050px){.massage-carousel{grid-auto-columns:minmax(300px,calc((100% - 16px)/2))}.review-preview{grid-template-columns:1fr}.social-actions{max-width:none}}
+@media(max-width:690px){
+  .team-benefit-teaser{grid-template-columns:1fr;align-items:start}.team-benefit-teaser .button{width:100%}
+  .massage-intro{grid-template-columns:1fr;gap:15px}.carousel-heading{align-items:center}.carousel-controls button{width:44px;height:44px}
+  .massage-carousel{grid-auto-columns:min(86vw,330px);gap:12px;margin-right:calc(-1 * clamp(20px,6vw,32px))}.massage-card__visual{min-height:165px}.massage-card__content{padding:21px}.massage-card__content>p:not(.eyebrow){min-height:0}
+  .review-dashboard__top{align-items:flex-start;flex-direction:column}.review-dashboard ol{grid-template-columns:1fr}.review-dashboard li{border-right:0;border-bottom:1px solid #d9e7e3}.review-dashboard li:last-child{border-bottom:0}
+  .social-actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.social-button{font-size:clamp(.62rem,2.9vw,.82rem);border-radius:14px}.social-button__symbol{width:clamp(31px,8vw,38px);height:clamp(31px,8vw,38px)}
+}
+@media(max-width:390px){.social-actions{gap:5px}.social-button{padding:6px 2px;font-size:.6rem}.social-button__symbol{width:30px;height:30px}.social-button__symbol svg{width:17px;height:17px}.review-placeholder{padding:17px}}
+@media(prefers-reduced-motion:reduce){.carousel-controls button{transition:none}.massage-carousel{scroll-behavior:auto}}

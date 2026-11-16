@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 const SITE_URL = process.env.BENVORA_SITE_URL ?? 'https://benvora-grup.avyron.eu';
 const PREVIEW_MODE = (process.env.BENVORA_RELEASE_MODE ?? 'preview') === 'preview';
 const legalPages = ['/confidentialitate/', '/cookie-uri/', '/termeni-si-conditii/'];
-const pages = ['/', '/masaj-la-birou/', '/pentru-companii/', '/programari/', '/contact/', ...legalPages];
+const pages = ['/', '/masaj-la-birou/', '/beneficiu-pentru-echipa/', '/pentru-companii/', '/programari/', '/contact/', ...legalPages];
 for (const path of pages) {
   const html = await readFile(`dist${path}index.html`, 'utf8');
   for (const item of ['<html lang="ro">', '<main id="main"', '<h1 ', 'rel="canonical"', 'name="description"', 'application/ld+json']) {
@@ -35,6 +35,8 @@ for (const path of pages) {
   if (!html.includes('Conectează-te / Înregistrează-te') || !html.includes('id="site-toast"')) throw new Error(`${path}: missing account announcement`);
   if (!html.includes('id="menu-toggle"') || !html.includes('role="dialog" aria-modal="true" aria-label="Meniu de navigare"')) throw new Error(`${path}: missing accessible overlay menu`);
   if (html.includes('id="explore-toggle"')) throw new Error(`${path}: duplicate navigation control remains`);
+  const mainNav = html.match(/<nav aria-label="Navigația principală">([\s\S]*?)<\/nav>/)?.[1] ?? '';
+  if (mainNav.includes('<span>01</span>') || mainNav.includes('<span>02</span>')) throw new Error(`${path}: numbered menu labels remain`);
   for (const legalPath of legalPages) {
     if (!html.includes(`href="${legalPath}"`)) throw new Error(`${path}: missing footer link to ${legalPath}`);
   }
@@ -49,6 +51,7 @@ if (!PREVIEW_MODE && [...sitemap.matchAll(/<loc>/g)].length !== pages.length - l
 const home = await readFile('dist/index.html', 'utf8');
 if (!home.includes('<main id="main" class="home-main"')) throw new Error('Home needs scoped landing-page spacing');
 if (!home.includes('class="booking-teaser section-pad"') || !home.includes('href="/programari/">Deschide calendarul')) throw new Error('Home must link to the booking calendar');
+if (!home.includes('class="team-benefit-teaser section-pad"') || !home.includes('href="/beneficiu-pentru-echipa/">Vezi tipurile de masaj')) throw new Error('Home must introduce the team-benefit page');
 if (!home.includes('href="/contact/">Solicită ofertă') || !home.includes('class="topbar-cta" href="/contact/">Solicită ofertă')) throw new Error('Offer calls to action must use the same label');
 if (!home.includes('class="about-teaser section-pad" id="despre-noi"') || !home.includes('href="/#despre-noi">Despre noi')) throw new Error('Home must contain and link its about section');
 if (home.includes('href="/despre-noi/"')) throw new Error('Separate about page must be removed from navigation');
@@ -59,25 +62,33 @@ if (home.includes('/assets/hero-portrait')) throw new Error('Oversized portrait 
 if (!/<img src="\/assets\/service-480\.webp\?v=[a-f0-9]{12}" srcset="\/assets\/service-480\.webp\?v=[a-f0-9]{12} 480w, \/assets\/service-720\.webp\?v=[a-f0-9]{12} 720w, \/assets\/service-800\.webp\?v=[a-f0-9]{12} 800w, \/assets\/service-960\.webp\?v=[a-f0-9]{12} 960w, \/assets\/service-1280\.webp\?v=[a-f0-9]{12} 1280w, \/assets\/service\.webp\?v=[a-f0-9]{12} 1752w" sizes="\(min-width: 1640px\) 784px, \(min-width: 1440px\) 48vw, \(min-width: 691px\) 49vw, 88vw"[^>]*loading="lazy" fetchpriority="low"/.test(home)) throw new Error('Service image should be progressively sized and lazy loaded');
 if (!/<img src="\/assets\/brand-mark-96\.webp\?v=[a-f0-9]{12}" srcset="\/assets\/brand-mark-96\.webp\?v=[a-f0-9]{12} 96w, \/assets\/brand-mark-192\.webp\?v=[a-f0-9]{12} 192w, \/assets\/brand-mark-384\.webp\?v=[a-f0-9]{12} 384w" sizes="\(max-width: 420px\) 48px, 55px"/.test(home)) throw new Error('Footer logo should use its displayed dimensions');
 if (home.includes('class="image-break"')) throw new Error('Repeated cropped image section remains');
-for (const name of ['TikTok', 'Instagram', 'Facebook']) {
+for (const name of ['TikTok', 'Instagram', 'Facebook', 'LinkedIn']) {
   if (!home.includes(`Profilul Benvora Grup pe ${name} este în pregătire.`) && !home.includes(`aria-label="Benvora Grup pe ${name}"`)) throw new Error(`${name}: missing social channel`);
   if (!home.includes(`social-button--${name.toLowerCase()}`)) throw new Error(`${name}: missing distinct social card styling`);
 }
 const service = await readFile('dist/masaj-la-birou/index.html', 'utf8');
 if (!service.includes('class="faq-list"')) throw new Error('Service page is missing practical questions');
+const teamBenefit = await readFile('dist/beneficiu-pentru-echipa/index.html', 'utf8');
+if ([...teamBenefit.matchAll(/class="massage-card"/g)].length !== 3) throw new Error('Team-benefit page must present exactly three massage types');
+if (!teamBenefit.includes('data-carousel-prev') || !teamBenefit.includes('data-carousel-next') || !teamBenefit.includes('data-carousel tabindex="0"')) throw new Error('Massage carousel needs accessible controls');
+if (!teamBenefit.includes('Modul recenzii · în pregătire') || !teamBenefit.includes('Prima recenzie aprobată va fi afișată aici.') || !teamBenefit.includes('fără testimoniale inventate')) throw new Error('Review section must remain a truthful visual preview');
 const contact = await readFile('dist/contact/index.html', 'utf8');
 if (!contact.includes('id="contact-form"') || !contact.includes('Continuă pe WhatsApp')) throw new Error('Contact page needs its guided WhatsApp action');
-if (contact.includes('data-open-email') || contact.includes('data-email-domain=') || contact.includes('masajlabirou.ro')) throw new Error('Contact page must not advertise an unowned email domain');
+if (contact.includes('data-open-email') || contact.includes('data-email-domain=')) throw new Error('Contact page must not activate an unconfigured email action');
+if ([...contact.matchAll(/contact@masajlabirou\.ro/g)].length !== 2 || !contact.includes('E-MAIL · ÎN CURS DE ACTIVARE')) throw new Error('Contact page must show only the pending contact address in content and footer');
+for (const forbiddenAddress of ['office@masajlabirou.ro', 'programari@masajlabirou.ro', 'colaborari@masajlabirou.ro']) {
+  if (contact.includes(forbiddenAddress)) throw new Error(`Contact page still includes ${forbiddenAddress}`);
+}
 if (!contact.includes('name="phone" type="tel"') || !contact.includes('name="email" type="email"') || !contact.includes('class="select-wrap"')) throw new Error('Offer form needs separate contact fields and a styled native selector');
 if (!contact.includes('<main id="main" class="request-main"') || contact.indexOf('class="contact-form-section') > contact.indexOf('class="contact-grid"')) throw new Error('Offer form should appear before secondary contact details');
 const booking = await readFile('dist/programari/index.html', 'utf8');
 if (!booking.includes('id="booking-days"') || !booking.includes('id="booking-form"') || !booking.includes('name="slot"')) throw new Error('Booking page needs its calendar, interval selection and WhatsApp action');
-if (booking.includes('data-open-email') || booking.includes('data-email-domain=') || booking.includes('masajlabirou.ro')) throw new Error('Booking page must not advertise an unowned email domain');
+if (booking.includes('data-open-email') || booking.includes('data-email-domain=') || !booking.includes('E-mail în curs de activare')) throw new Error('Booking page must not activate the pending email address');
 if (!booking.includes('Ziua și intervalul sunt preferințe, nu locuri rezervate.')) throw new Error('Booking calendar must not imply confirmed availability');
 if (!booking.includes('src="/assets/requests.js?v=') || !booking.includes('href="/assets/booking.css?v=')) throw new Error('Booking page needs its interactive assets');
 const privacy = await readFile('dist/confidentialitate/index.html', 'utf8');
 if (!privacy.includes('Formularele de ofertă și programare pregătesc mesaje în browser')) throw new Error('Privacy page must describe both local forms');
-if (!privacy.includes('BENVORA GRUP SRL') || !privacy.includes('Nu există încă o adresă de e-mail publică') || privacy.includes('masajlabirou.ro')) throw new Error('Privacy page must not advertise an unowned email domain');
+if (!privacy.includes('BENVORA GRUP SRL') || !privacy.includes('contact@masajlabirou.ro') || !privacy.includes('va putea primi mesaje numai după activarea domeniului')) throw new Error('Privacy page must accurately describe the pending contact address');
 if (!home.includes('id="privacy-banner"') || !home.includes('id="privacy-dismiss"') || !home.includes('id="privacy-reopen"')) throw new Error('Privacy notice and reopen control must be present on all pages');
 if (!home.includes('Nu activăm cookie-uri de analiză sau publicitate.') || home.includes('Accept toate')) throw new Error('Privacy notice must describe the current technical-only setup without false optional consent');
 const redirects = await readFile('dist/_redirects', 'utf8');
@@ -90,7 +101,7 @@ const headers = await readFile('dist/_headers', 'utf8');
 if (PREVIEW_MODE && !headers.includes('X-Robots-Tag: noindex, nofollow')) throw new Error('Public preview needs noindex response header');
 if (!PREVIEW_MODE && headers.includes('X-Robots-Tag: noindex')) throw new Error('Release headers must not block indexing globally');
 const llms = await readFile('dist/llms.txt', 'utf8');
-if (!llms.startsWith('# Benvora Grup') || !llms.includes(`](${SITE_URL}/masaj-la-birou/)`) || !llms.includes(`](${SITE_URL}/programari/)`) || !llms.includes(`](${SITE_URL}/contact/)`)) throw new Error('llms.txt needs an H1 and real page links');
+if (!llms.startsWith('# Benvora Grup') || !llms.includes(`](${SITE_URL}/masaj-la-birou/)`) || !llms.includes(`](${SITE_URL}/beneficiu-pentru-echipa/)`) || !llms.includes(`](${SITE_URL}/programari/)`) || !llms.includes(`](${SITE_URL}/contact/)`)) throw new Error('llms.txt needs an H1 and real page links');
 const aiCatalog = JSON.parse(await readFile('dist/ai-catalog.json', 'utf8'));
 const wellKnownCatalog = JSON.parse(await readFile('dist/.well-known/ai-catalog.json', 'utf8'));
 const ardManifest = JSON.parse(await readFile('dist/.well-known/ard.json', 'utf8'));
