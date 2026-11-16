@@ -81,7 +81,8 @@ if (!booking.includes('src="/assets/requests.js?v=') || !booking.includes('href=
 const privacy = await readFile('dist/confidentialitate/index.html', 'utf8');
 if (!privacy.includes('Formularele de ofertă și programare pregătesc mesaje în browser')) throw new Error('Privacy page must describe both local forms');
 if (!privacy.includes('BENVORA GRUP SRL') || !privacy.includes('contact@masajlabirou.ro') || privacy.includes('contact@benvoragrup.ro')) throw new Error('Privacy page must use the supplied legal identity and future domain email');
-if (!home.includes('id="privacy-banner"') || !home.includes('id="privacy-dismiss"')) throw new Error('Privacy notice must be present on all pages');
+if (!home.includes('id="privacy-banner"') || !home.includes('id="privacy-dismiss"') || !home.includes('id="privacy-reopen"')) throw new Error('Privacy notice and reopen control must be present on all pages');
+if (!home.includes('Nu activăm cookie-uri de analiză sau publicitate.') || home.includes('Accept toate')) throw new Error('Privacy notice must describe the current technical-only setup without false optional consent');
 const redirects = await readFile('dist/_redirects', 'utf8');
 if (!redirects.includes('/despre-noi/ / 301')) throw new Error('Former about URL must redirect to the combined home page');
 const robots = await readFile('dist/robots.txt', 'utf8');
