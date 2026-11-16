@@ -48,11 +48,14 @@ const topbar = document.querySelector('.topbar');
 const floatingActions = document.querySelector('.float-actions');
 const floatingClearZones = [...document.querySelectorAll('.hero, .page-hero, .social-section, .footer')];
 let scrollFrame = 0;
+let compactControls = false;
 function updateCompactControls() {
   scrollFrame = 0;
-  const compact = window.scrollY > 72;
-  topbar.classList.toggle('is-compact', compact);
-  floatingActions.classList.toggle('is-compact', compact);
+  const nextCompact = compactControls ? window.scrollY > 40 : window.scrollY > 120;
+  if (nextCompact === compactControls) return;
+  compactControls = nextCompact;
+  topbar.classList.toggle('is-compact', nextCompact);
+  floatingActions.classList.toggle('is-compact', nextCompact);
 }
 window.addEventListener('scroll', () => {
   if (!scrollFrame) scrollFrame = requestAnimationFrame(updateCompactControls);
@@ -60,8 +63,8 @@ window.addEventListener('scroll', () => {
 window.addEventListener('pageshow', event => {
   if (event.persisted) {
     closeMenu();
-    updateCompactControls();
   }
+  updateCompactControls();
 });
 
 // IntersectionObserver does the visibility work without synchronous layout reads on scroll.

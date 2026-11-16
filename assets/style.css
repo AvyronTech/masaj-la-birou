@@ -461,3 +461,9 @@
 .about-teaser{scroll-margin-top:100px}
 .about-teaser__details p+p{margin-top:10px}
 @media(max-width:690px){.privacy-banner{left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));width:auto;max-height:min(58dvh,430px);padding:15px 15px 12px;border-radius:17px}.privacy-banner__header{gap:10px}.privacy-banner__mark{width:35px;height:35px;font-size:1.3rem}.privacy-banner__eyebrow{font-size:.51rem}.privacy-banner h2{font-size:1.2rem}.privacy-banner__summary{font-size:.76rem;line-height:1.45}.privacy-banner__details summary{font-size:.74rem}.privacy-banner__footer{bottom:-12px;gap:8px;margin:10px -15px -12px;padding:9px 15px 12px}.privacy-banner__links{gap:5px 10px}.privacy-banner__links a{font-size:.68rem}.privacy-banner__footer button{padding:8px 13px}.footer-privacy-button{min-height:44px}}
+
+/* A sticky bar must keep the same box and top offset when its scroll state changes. */
+.topbar,.topbar.is-compact{transition:background .2s ease,box-shadow .2s ease}
+.topbar.is-compact{top:16px;min-height:66px;padding:10px 15px 10px 24px}
+@media(max-width:900px){.topbar.is-compact{top:12px;min-height:60px;padding:10px 13px}}
+@media(max-width:360px){.topbar.is-compact{min-height:58px;padding:8px 10px}}
