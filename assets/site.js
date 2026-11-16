@@ -81,6 +81,16 @@ if ('IntersectionObserver' in window) {
 }
 
 const siteToast = document.getElementById('site-toast');
+const privacyBanner = document.getElementById('privacy-banner');
+const privacyDismiss = document.getElementById('privacy-dismiss');
+const privacyPreferenceKey = 'benvora-privacy-notice-v1';
+let privacyNoticeDismissed = false;
+try { privacyNoticeDismissed = localStorage.getItem(privacyPreferenceKey) === 'acknowledged'; } catch { /* Private browsing can block storage. */ }
+if (!privacyNoticeDismissed) privacyBanner.hidden = false;
+privacyDismiss.addEventListener('click', () => {
+  privacyBanner.hidden = true;
+  try { localStorage.setItem(privacyPreferenceKey, 'acknowledged'); } catch { /* Keep this visit usable without storage. */ }
+});
 let toastTimer;
 document.querySelectorAll('[data-coming-soon]').forEach(button => {
   button.addEventListener('click', () => {
