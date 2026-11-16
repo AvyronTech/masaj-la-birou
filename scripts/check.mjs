@@ -75,7 +75,7 @@ if (!teamBenefit.includes('Modul recenzii · în pregătire') || !teamBenefit.in
 const contact = await readFile('dist/contact/index.html', 'utf8');
 if (!contact.includes('id="contact-form"') || !contact.includes('Continuă pe WhatsApp')) throw new Error('Contact page needs its guided WhatsApp action');
 if (contact.includes('data-open-email') || contact.includes('data-email-domain=')) throw new Error('Contact page must not activate an unconfigured email action');
-if ([...contact.matchAll(/class="email-address"/g)].length !== 2 || contact.includes('contact@masajlabirou.ro') || !contact.includes('E-MAIL · ÎN CURS DE ACTIVARE')) throw new Error('Contact page must show only the static pending contact address in content and footer');
+if ([...contact.matchAll(/class="email-address"/g)].length !== 2 || [...contact.matchAll(/class="visually-hidden">contact la masajlabirou punct ro/g)].length !== 2 || contact.includes('class="email-address" aria-label=') || contact.includes('contact@masajlabirou.ro') || !contact.includes('E-MAIL · ÎN CURS DE ACTIVARE')) throw new Error('Contact page must show only the accessible static pending contact address in content and footer');
 for (const forbiddenAddress of ['office@masajlabirou.ro', 'programari@masajlabirou.ro', 'colaborari@masajlabirou.ro']) {
   if (contact.includes(forbiddenAddress)) throw new Error(`Contact page still includes ${forbiddenAddress}`);
 }
@@ -86,6 +86,8 @@ if (!booking.includes('id="booking-days"') || !booking.includes('id="booking-for
 if (booking.includes('data-open-email') || booking.includes('data-email-domain=') || !booking.includes('E-mail în curs de activare')) throw new Error('Booking page must not activate the pending email address');
 if (!booking.includes('Ziua și intervalul sunt preferințe, nu locuri rezervate.')) throw new Error('Booking calendar must not imply confirmed availability');
 if (!booking.includes('src="/assets/requests.js?v=') || !booking.includes('href="/assets/booking.css?v=')) throw new Error('Booking page needs its interactive assets');
+const requestsScript = await readFile('dist/assets/requests.js', 'utf8');
+if (!requestsScript.includes('button.tabIndex = -1;') || !requestsScript.includes('active.tabIndex = 0;')) throw new Error('Booking calendar must expose only one day in the keyboard tab order');
 const privacy = await readFile('dist/confidentialitate/index.html', 'utf8');
 if (!privacy.includes('Formularele de ofertă și programare pregătesc mesaje în browser')) throw new Error('Privacy page must describe both local forms');
 if (!privacy.includes('BENVORA GRUP SRL') || !privacy.includes('class="email-address"') || privacy.includes('contact@masajlabirou.ro') || !privacy.includes('va putea primi mesaje numai după activarea domeniului')) throw new Error('Privacy page must accurately describe the pending contact address without activating it');
