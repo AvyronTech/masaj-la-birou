@@ -2,11 +2,8 @@ const offerForm = document.getElementById('contact-form');
 const bookingForm = document.getElementById('booking-form');
 
 const readField = (data, name) => String(data.get(name) || '').trim();
-const destination = form => `${form.dataset.emailLocal}@${form.dataset.emailDomain}`;
 const whatsappUrl = (form, message) =>
   `https://wa.me/${form.dataset.whatsappNumber}?text=${encodeURIComponent(message)}`;
-const emailUrl = (form, subject, message) =>
-  `mailto:${destination(form)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
 
 function offerMessage(form) {
   const data = new FormData(form);
@@ -23,7 +20,7 @@ function offerMessage(form) {
   return lines.join('\n');
 }
 
-function bindRequestActions(form, createMessage, subject, validate = () => true) {
+function bindRequestActions(form, createMessage, validate = () => true) {
   if (!form) return;
   const phone = form.querySelector('[name="phone"]');
   phone.addEventListener('input', () => phone.setCustomValidity(''));
@@ -37,12 +34,9 @@ function bindRequestActions(form, createMessage, subject, validate = () => true)
     event.preventDefault();
     if (prepare()) window.location.href = whatsappUrl(form, createMessage(form));
   });
-  form.querySelector('[data-open-email]').addEventListener('click', () => {
-    if (prepare()) window.location.href = emailUrl(form, subject, createMessage(form));
-  });
 }
 
-bindRequestActions(offerForm, offerMessage, 'Solicitare ofertă masaj la birou – Benvora Grup');
+bindRequestActions(offerForm, offerMessage);
 
 if (bookingForm) {
   const monthLabel = document.getElementById('booking-month');
@@ -170,5 +164,5 @@ if (bookingForm) {
   }
 
   renderCalendar();
-  bindRequestActions(bookingForm, bookingMessage, 'Solicitare programare masaj la birou – Benvora Grup', validateDate);
+  bindRequestActions(bookingForm, bookingMessage, validateDate);
 }
